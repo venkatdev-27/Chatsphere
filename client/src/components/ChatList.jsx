@@ -161,7 +161,7 @@ const ChatItem = ({ chat, sender, isSelected, onSelect, onLongPress, onThreeDots
             <div className="flex flex-col flex-1">
                 <div className="flex items-center gap-2">
                     <span className="font-semibold text-sm">
-                        {!chat.isGroupChat ? sender.username : chat.chatName}
+                        {!chat.isGroupChat ? (sender?.username || 'Unknown User') : chat.chatName}
                     </span>
                     {chat.isGroupChat && (
                         <span className={`text-xs px-1.5 py-0.5 rounded ${isSelected ? 'bg-blue-700' : 'bg-theme-bg-tertiary'} ${isSelected ? 'text-white' : 'text-theme-text-secondary'}`}>
@@ -181,6 +181,8 @@ const ChatItem = ({ chat, sender, isSelected, onSelect, onLongPress, onThreeDots
                 )}
             </div>
 
+
+
             {/* Three Dots Menu (Desktop) */}
             <button
                 onMouseDown={(e) => e.stopPropagation()}
@@ -193,12 +195,14 @@ const ChatItem = ({ chat, sender, isSelected, onSelect, onLongPress, onThreeDots
             </button>
 
             {/* Unread Count Badge 📬 */}
-            {chat.unreadCount > 0 && (
-                <div className="absolute top-2 right-10 bg-blue-500 text-white text-xs font-bold rounded-full h-5 min-w-[20px] flex items-center justify-center px-1.5 shadow-sm border border-theme-bg-secondary">
-                    {chat.unreadCount}
-                </div>
-            )}
-        </div>
+            {
+                chat.unreadCount > 0 && (
+                    <div className="absolute top-2 right-10 bg-blue-500 text-white text-xs font-bold rounded-full h-5 min-w-[20px] flex items-center justify-center px-1.5 shadow-sm border border-theme-bg-secondary">
+                        {chat.unreadCount}
+                    </div>
+                )
+            }
+        </div >
     );
 };
 

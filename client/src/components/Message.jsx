@@ -13,7 +13,7 @@ const Message = ({ message, isGroupChat }) => {
     const [showThreeDots, setShowThreeDots] = useState(false);
     const menuRef = useRef(null);
 
-    const isSender = message.sender._id === user._id;
+    const isSender = message.sender?._id === user._id;
     const isGroupAdmin = selectedChat?.isGroupChat && selectedChat?.groupAdmin?._id === user._id;
 
     const longPressHandlers = useLongPress(() => {
@@ -70,7 +70,7 @@ const Message = ({ message, isGroupChat }) => {
                 <div className="flex flex-col max-w-[70%]">
                     {isGroupChat && !isSender && (
                         <span className="text-xs text-gray-400 ml-1 mb-1">
-                            {message.sender.username}
+                            {message.sender?.username || 'Unknown'}
                         </span>
                     )}
                     <div className="px-4 py-2 rounded-lg bg-theme-bg-tertiary text-theme-text-muted italic border border-theme-border">
@@ -98,7 +98,7 @@ const Message = ({ message, isGroupChat }) => {
                 {/* Sender Name in Group Chat */}
                 {isGroupChat && !isSender && (
                     <span className="text-xs text-theme-text-muted ml-1 mb-1">
-                        {message.sender.username}
+                        {message.sender?.username || 'Unknown'}
                     </span>
                 )}
 
