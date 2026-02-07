@@ -17,13 +17,7 @@ const messageSlice = createSlice({
         state.messages = [...state.messages, action.payload];
       }
     },
-    updateMessage: (state, action) => {
-        const { _id, content } = action.payload;
-        const index = state.messages.findIndex(m => m._id === _id);
-        if (index !== -1) {
-            state.messages[index].content = content;
-        }
-    },
+
     clearMessageError: (state) => {
       state.error = null;
     },
@@ -86,5 +80,5 @@ const messageSlice = createSlice({
   },
 });
 
-export const { addMessage, clearMessageError, handleMessageDeleted, updateMessage } = messageSlice.actions;
+export const { addMessage, clearMessageError, handleMessageDeleted } = messageSlice.actions;
 export default messageSlice.reducer;
