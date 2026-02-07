@@ -118,22 +118,24 @@ const login = async (req, res) => {
 // @desc    Update user profile picture 🖼️
 // @route   POST /api/auth/profile-pic
 // @access  Private
-const BASE_URL = process.env.BASE_URL;
+const baseUrl = `${req.protocol}://${req.get("host")}`;
+
 
 const updateProfilePic = async (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({
         error: "NO_FILE",
-        message: "No file uploaded"
+        message: "No file uploaded",
       });
     }
 
     const filePath = req.file.path.replace(/\\/g, "/");
+    const baseUrl = `${req.protocol}://${req.get("host")}`;
 
     const updatedUser = await User.findByIdAndUpdate(
       req.user._id,
-      { pic: `${BASE_URL}/${filePath}` },
+      { pic: `${baseUrl}/${filePath}` },
       { new: true, select: "-password" }
     );
 
@@ -142,7 +144,7 @@ const updateProfilePic = async (req, res) => {
     console.error(error);
     res.status(500).json({
       error: "SERVER_ERROR",
-      message: "Server error"
+      message: "Server error",
     });
   }
 };
