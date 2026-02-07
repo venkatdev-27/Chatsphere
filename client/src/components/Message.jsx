@@ -93,8 +93,6 @@ const Message = ({ message, isGroupChat }) => {
     return (
         <div
             className={`flex ${isSender ? 'justify-end' : 'justify-start'} mb-4 relative group`}
-            onMouseEnter={() => setShowThreeDots(true)}
-            onMouseLeave={() => setShowThreeDots(false)}
         >
             <div className="flex flex-col max-w-[70%]">
                 {/* Sender Name in Group Chat */}
@@ -108,34 +106,6 @@ const Message = ({ message, isGroupChat }) => {
                     {/* Three dots menu button (desktop only) */}
                     {/* Three dots menu button */}
                     {/* Three dots menu button */}
-                    {!showMenu && (
-                        <button
-                            onClick={(e) => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                setShowMenu(true);
-                            }}
-                            onMouseDown={(e) => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                            }}
-                            onTouchStart={(e) => {
-                                e.stopPropagation();
-                            }}
-                            className={`absolute top-1 ${isSender ? 'left-[-30px]' : 'right-[-30px]'} 
-                                bg-theme-bg-tertiary hover:bg-theme-bg-secondary text-theme-text-primary rounded-full p-1 
-                                shadow-sm z-10 transition-opacity duration-200
-                                opacity-100 sm:opacity-0 sm:group-hover:opacity-100`}
-                            type="button"
-                        >
-                            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 16 16">
-                                <circle cx="8" cy="2" r="1.5" />
-                                <circle cx="8" cy="8" r="1.5" />
-                                <circle cx="8" cy="14" r="1.5" />
-                            </svg>
-                        </button>
-                    )}
-
                     {/* Context Menu */}
                     {showMenu && (
                         <div

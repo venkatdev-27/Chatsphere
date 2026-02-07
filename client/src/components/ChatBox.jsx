@@ -59,6 +59,28 @@ const ChatBox = ({ onBackClick }) => {
         }
     }, [messages]);
 
+    // Auto-scroll on mobile keyboard open
+    useEffect(() => {
+        const handleResize = () => {
+            if (document.activeElement === fileInputRef.current?.nextElementSibling) {
+                // Sligth delay to allow viewport to resize
+                setTimeout(() => {
+                    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
+                }, 100);
+            }
+        };
+
+        if (window.visualViewport) {
+            window.visualViewport.addEventListener('resize', handleResize);
+        }
+
+        return () => {
+            if (window.visualViewport) {
+                window.visualViewport.removeEventListener('resize', handleResize);
+            }
+        };
+    }, []);
+
     const handleScroll = (e) => {
         const { scrollTop, scrollHeight } = e.target;
         if (scrollTop === 0 && messages.length >= 20 && !loading) {

@@ -188,7 +188,7 @@ const ChatItem = ({ chat, sender, isSelected, onSelect, onLongPress, onThreeDots
             <button
                 onMouseDown={(e) => e.stopPropagation()}
                 onClick={(e) => onThreeDotsClick(chat, e)}
-                className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 rounded hover:bg-theme-bg-tertiary transition-all text-theme-text-secondary hover:text-theme-text-primary"
+                className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 rounded hover:bg-theme-bg-tertiary transition-all text-theme-text-secondary hover:text-theme-text-primary hidden md:block"
             >
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                     <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
