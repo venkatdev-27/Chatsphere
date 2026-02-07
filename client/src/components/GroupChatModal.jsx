@@ -35,6 +35,21 @@ const GroupChatModal = ({ isOpen, onClose }) => {
         setSelectedUsers(selectedUsers.filter((sel) => sel._id !== delUser._id));
     };
 
+    const clearSearch = () => {
+        setSearch('');
+        dispatch(clearSearchResults());
+    };
+
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            // If search has text, maybe we want to select the first user?
+            // For now, let's just make it submit if valid
+            if (groupChatName && selectedUsers.length >= 2) {
+                handleSubmit();
+            }
+        }
+    };
+
     const handleSubmit = async () => {
         if (!groupChatName || !selectedUsers) {
             toast.warning('Please fill all the fields');
@@ -79,16 +94,32 @@ const GroupChatModal = ({ isOpen, onClose }) => {
                     <input
                         type="text"
                         placeholder="Chat Name"
+                        value={groupChatName}
+                        onKeyDown={handleKeyDown}
                         className="w-full bg-gray-700 text-white p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                         onChange={(e) => setGroupChatName(e.target.value)}
                     />
 
-                    <input
-                        type="text"
-                        placeholder="Add Users eg: John, Jane"
-                        className="w-full bg-gray-700 text-white p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        onChange={(e) => handleSearch(e.target.value)}
-                    />
+                    <div className="relative">
+                        <input
+                            type="text"
+                            placeholder="Add Users eg: John, Jane"
+                            value={search}
+                            onKeyDown={handleKeyDown}
+                            className="w-full bg-gray-700 text-white p-2 pr-8 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            onChange={(e) => handleSearch(e.target.value)}
+                        />
+                        {search && (
+                            <button
+                                onClick={clearSearch}
+                                className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                                </svg>
+                            </button>
+                        )}
+                    </div>
 
                     {/* Selected Users Chips */}
                     <div className="flex flex-wrap gap-2">

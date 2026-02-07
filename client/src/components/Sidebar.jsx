@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchChats, accessChat } from '../redux/thunks/chatThunks';
 import ChatList from './ChatList';
@@ -20,6 +20,25 @@ const Sidebar = ({ onChatSelect }) => {
     const fileInputRef = useRef(null);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isGroupModalOpen, setIsGroupModalOpen] = useState(false);
+    const [searchQuery, setSearchQuery] = useState('');
+
+    const allUsers = useMemo(() => {
+        if (!chats) return [];
+        const uniqueUsersMap = new Map();
+        chats.forEach(chat => {
+            if (!chat.isGroupChat) {
+                const otherUser = chat.users.find(u => u._id !== user._id);
+                if (otherUser) uniqueUsersMap.set(otherUser._id, otherUser);
+            } else {
+                chat.users.forEach(u => {
+                    if (u._id !== user._id) {
+                        uniqueUsersMap.set(u._id, u);
+                    }
+                });
+            }
+        });
+        return Array.from(uniqueUsersMap.values());
+    }, [chats, user]);
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
@@ -60,6 +79,7 @@ const Sidebar = ({ onChatSelect }) => {
 
     const handleSearch = (e) => {
         const query = e.target.value;
+        setSearchQuery(query);
         if (!query) {
             dispatch(clearSearchResults());
             return;
@@ -67,8 +87,14 @@ const Sidebar = ({ onChatSelect }) => {
         dispatch(searchUsers(query));
     };
 
+    const clearSearch = () => {
+        setSearchQuery('');
+        dispatch(clearSearchResults());
+    };
+
     const accessUserChat = (userId) => {
         dispatch(accessChat(userId));
+        setSearchQuery('');
         dispatch(clearSearchResults());
     };
 
@@ -186,10 +212,24 @@ const Sidebar = ({ onChatSelect }) => {
             <div className="p-3 relative">
                 <input
                     type="text"
+                    value={searchQuery}
                     onChange={handleSearch}
                     placeholder="Search users..."
-                    className="w-full bg-theme-bg-tertiary text-theme-text-primary rounded-lg px-4 py-2 focus:outline-none focus:ring-1 focus:ring-theme-primary placeholder-theme-text-muted"
+                    className="w-full bg-theme-bg-tertiary text-theme-text-primary rounded-lg px-4 py-2 pr-10 focus:outline-none focus:ring-1 focus:ring-theme-primary placeholder-theme-text-muted transition-all"
                 />
+
+                {/* Clear Button */}
+                {searchQuery && (
+                    <button
+                        onClick={clearSearch}
+                        className="absolute right-5 top-1/2 -translate-y-1/2 text-theme-text-secondary hover:text-theme-text-primary transition-colors p-1 rounded-full hover:bg-theme-bg-secondary"
+                        title="Clear search"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                        </svg>
+                    </button>
+                )}
                 {searchResults.length > 0 && (
                     <div className="absolute top-12 left-3 right-3 bg-theme-bg-tertiary border border-theme-border rounded-lg shadow-lg z-10 max-h-60 overflow-y-auto custom-scrollbar">
                         {searchResults.map(u => (
@@ -210,11 +250,12 @@ const Sidebar = ({ onChatSelect }) => {
             </div>
 
 
-            {/* Online Users List */}
+            {/* Quick Access Users List (All Users with Status) */}
             <div className="px-4 py-2 border-b border-theme-border">
                 <div className="flex space-x-3 overflow-x-auto pb-2 custom-scrollbar">
-                    {onlineUsers.map((u) => (
-                        u._id !== user._id && (
+                    {allUsers.map((u) => {
+                        const isOnline = onlineUsers.some(onlineUser => onlineUser._id === u._id);
+                        return (
                             <div
                                 key={u._id}
                                 onClick={() => dispatch(accessChat(u._id))}
@@ -224,16 +265,18 @@ const Sidebar = ({ onChatSelect }) => {
                                     <img
                                         src={getProfilePicUrl(u.pic)}
                                         alt={u.username}
-                                        className="w-10 h-10 rounded-full border-2 border-green-500 object-cover group-hover:scale-105 transition-transform"
+                                        className={`w-10 h-10 rounded-full border-2 object-cover group-hover:scale-105 transition-transform ${isOnline ? 'border-green-500' : 'border-gray-500'}`}
                                     />
-                                    <div className="absolute bottom-0 right-0 w-3 h-3 bg-success-color rounded-full border-2 border-theme-bg-secondary"></div>
+                                    <div className={`absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-theme-bg-secondary ${isOnline ? 'bg-success-color' : 'bg-gray-400'}`}></div>
                                 </div>
-                                <span className="text-xs text-theme-text-secondary mt-1 truncate w-12 text-center group-hover:text-theme-text-primary transition-colors">{u.username.split(' ')[0]}</span>
+                                <span className={`text-xs mt-1 truncate w-12 text-center transition-colors ${isOnline ? 'text-theme-text-primary font-medium' : 'text-theme-text-secondary group-hover:text-theme-text-primary'}`}>
+                                    {u.username.split(' ')[0]}
+                                </span>
                             </div>
-                        )
-                    ))}
-                    {onlineUsers.length <= 1 && (
-                        <span className="text-xs text-theme-text-muted italic">No one else is online</span>
+                        );
+                    })}
+                    {allUsers.length === 0 && (
+                        <span className="text-xs text-theme-text-muted italic">No contacts yet</span>
                     )}
                 </div>
             </div>

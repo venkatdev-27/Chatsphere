@@ -142,8 +142,8 @@ const ChatBox = ({ onBackClick }) => {
                         <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
                     </svg>
                 </button>
-                <div className="flex items-center justify-between w-full px-2">
-                    <div className="flex items-center gap-3">
+                <div className="flex items-center justify-between w-full px-1 sm:px-2 gap-1 sm:gap-2">
+                    <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
                         <img
                             src={!selectedChat.isGroupChat
                                 ? getProfilePicUrl(selectedChat.users.find((u) => u._id !== user._id)?.pic)
@@ -151,13 +151,15 @@ const ChatBox = ({ onBackClick }) => {
                             alt="Profile"
                             className="w-10 h-10 rounded-full object-cover border border-theme-border"
                         />
-                        <span className="text-lg font-bold text-theme-text-primary truncate max-w-[150px] md:max-w-md">
-                            {!selectedChat.isGroupChat
-                                ? selectedChat.users.find((u) => u._id !== user._id)?.username
-                                : selectedChat.chatName}
-                        </span>
+                        <div className="flex flex-col min-w-0">
+                            <span className="text-sm sm:text-lg font-bold text-theme-text-primary truncate">
+                                {!selectedChat.isGroupChat
+                                    ? selectedChat.users.find((u) => u._id !== user._id)?.username
+                                    : selectedChat.chatName}
+                            </span>
+                        </div>
                         {selectedChat.isGroupChat && (
-                            <span className="text-xs px-2 py-1 rounded bg-blue-600 text-white font-medium">
+                            <span className="text-[10px] sm:text-xs px-1.5 py-0.5 sm:px-2 sm:py-1 rounded bg-blue-600 text-white font-medium flex-shrink-0">
                                 Group
                             </span>
                         )}
@@ -165,12 +167,12 @@ const ChatBox = ({ onBackClick }) => {
                     {selectedChat.isGroupChat && (
                         <button
                             onClick={() => setUpdateModalOpen(true)}
-                            className="bg-theme-bg-secondary hover:bg-theme-bg-primary text-theme-text-primary border border-theme-border px-3 py-1.5 rounded-md text-xs font-medium transition-all flex items-center gap-1.5 shadow-sm hover:shadow-md"
+                            className="bg-theme-bg-secondary hover:bg-theme-bg-primary text-theme-text-primary border border-theme-border px-2 py-1 sm:px-3 sm:py-1.5 rounded-md text-xs font-medium transition-all flex items-center gap-1.5 shadow-sm hover:shadow-md flex-shrink-0"
                         >
                             <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
-                            Info
+                            <span className="hidden sm:inline">Info</span>
                         </button>
                     )}
                 </div>

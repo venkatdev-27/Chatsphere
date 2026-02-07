@@ -70,6 +70,19 @@ const UpdateGroupChatModal = ({ isOpen, onClose, fetchMessages }) => {
         dispatch(searchUsers(query));
     };
 
+    const clearSearch = () => {
+        setSearch('');
+        dispatch(clearSearchResults());
+    };
+
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            // If search has text, do nothing or select? 
+            // If modifying name, Enter should Save.
+            handleSave();
+        }
+    };
+
     const handleSave = async () => {
         setLoading(true);
         try {
@@ -117,6 +130,7 @@ const UpdateGroupChatModal = ({ isOpen, onClose, fetchMessages }) => {
                                 value={groupChatName}
                                 className="w-full bg-gray-700 text-white p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
                                 onChange={(e) => setGroupChatName(e.target.value)}
+                                onKeyDown={handleKeyDown} // Enter to save rename
                             />
                         </div>
                     )}
@@ -124,14 +138,29 @@ const UpdateGroupChatModal = ({ isOpen, onClose, fetchMessages }) => {
                     {/* Add User - Admin Only & Must be in group */}
                     {selectedChat.groupAdmin._id === user._id && selectedChat.users.some(u => u._id === user._id) && (
                         <>
-                            <input
-                                type="text"
-                                placeholder="Add User to Group"
-                                value={search}
-                                className="w-full bg-gray-700 text-white p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                onChange={(e) => handleSearch(e.target.value)}
-                                onFocus={() => handleSearch(search)} // Trigger search on focus (even if empty) to show all
-                            />
+                            <div className="relative">
+                                <input
+                                    type="text"
+                                    placeholder="Add User to Group"
+                                    value={search}
+                                    className="w-full bg-gray-700 text-white p-2 pr-8 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    onChange={(e) => handleSearch(e.target.value)}
+                                    onFocus={() => handleSearch(search)}
+                                // onKeyDown={handleKeyDown} // Maybe don't save on Enter here? Only for renaming?
+                                // Actually user might expect Enter to ADD the top user, or SAVE changes? 
+                                // Let's stick to X button here to avoid accidental Saves while searching users.
+                                />
+                                {search && (
+                                    <button
+                                        onClick={clearSearch}
+                                        className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white"
+                                    >
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                                        </svg>
+                                    </button>
+                                )}
+                            </div>
 
                             {/* Selected/Pending Users Chips */}
                             {usersToAdd.length > 0 && (
