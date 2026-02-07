@@ -129,9 +129,9 @@ const ChatBox = ({ onBackClick }) => {
     }
 
     return (
-        <div className="flex flex-col h-full w-full bg-theme-bg-primary border-l border-theme-border relative">
+        <div className="flex flex-col h-full w-full bg-theme-bg-primary border-l border-theme-border relative overflow-hidden">
             {/* Header */}
-            <div className="p-4 bg-theme-bg-tertiary border-b border-theme-border flex items-center shadow-md">
+            <div className="p-4 bg-theme-bg-tertiary border-b border-theme-border flex items-center shadow-md flex-shrink-0">
                 {/* Back Button (Mobile Only) */}
                 <button
                     onClick={onBackClick}
@@ -178,12 +178,11 @@ const ChatBox = ({ onBackClick }) => {
                 </div>
             </div>
 
-            {/* Messages Area - with bottom padding for fixed input on mobile */}
+            {/* Messages Area */}
             <div
                 ref={messagesContainerRef}
                 onScroll={handleScroll}
-                className="flex-1 overflow-y-auto p-4 custom-scrollbar bg-theme-bg-primary space-y-4 pb-4"
-                style={{ scrollBehavior: 'smooth' }}
+                className="flex-1 overflow-y-auto p-4 custom-scrollbar bg-theme-bg-primary space-y-4 min-h-0"
             >
                 {loading ? (
                     <div className="text-center text-theme-text-muted mt-5">Loading messages...</div>
@@ -210,77 +209,79 @@ const ChatBox = ({ onBackClick }) => {
             </div>
 
             {/* Input Area or Removed Message */}
-            {selectedChat.isGroupChat && !selectedChat.users.some(u => u._id === user._id) ? (
-                <div className="p-4 bg-theme-bg-tertiary border-t border-theme-border text-center">
-                    <p className="text-red-500 font-semibold bg-red-500/10 py-3 rounded-lg border border-red-500/20">
-                        🚫 You have been removed from this group
-                    </p>
-                </div>
-            ) : selectedChat.isGroupChat && !selectedChat.users.some(u => u._id === selectedChat.groupAdmin._id) ? (
-                <div className="p-4 bg-theme-bg-tertiary border-t border-theme-border text-center">
-                    <p className="text-orange-500 font-semibold bg-orange-500/10 py-3 rounded-lg border border-orange-500/20">
-                        🔒 Group is closed because Admin left
-                    </p>
-                </div>
-            ) : (
-                <form onSubmit={handleSendMessage} className="w-full p-4 bg-theme-bg-tertiary border-t border-theme-border flex items-center z-10 sticky bottom-0">
-                    {/* File Preview */}
-                    {file && (
-                        <div className="absolute bottom-20 left-4 bg-theme-bg-tertiary border border-theme-border rounded-lg p-2 shadow-lg mb-2">
-                            <div className="relative">
-                                {file.type.startsWith('image/') ? (
-                                    <img src={previewUrl} alt="Preview" className="h-32 rounded-lg object-contain" />
-                                ) : (
-                                    <video src={previewUrl} controls className="h-32 rounded-lg" />
-                                )}
-                                <button
-                                    type="button"
-                                    onClick={clearFile}
-                                    className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 shadow-md"
-                                >
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4">
-                                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                                    </svg>
-                                </button>
+            <div className="flex-shrink-0">
+                {selectedChat.isGroupChat && !selectedChat.users.some(u => u._id === user._id) ? (
+                    <div className="p-4 bg-theme-bg-tertiary border-t border-theme-border text-center">
+                        <p className="text-red-500 font-semibold bg-red-500/10 py-3 rounded-lg border border-red-500/20">
+                            🚫 You have been removed from this group
+                        </p>
+                    </div>
+                ) : selectedChat.isGroupChat && !selectedChat.users.some(u => u._id === selectedChat.groupAdmin._id) ? (
+                    <div className="p-4 bg-theme-bg-tertiary border-t border-theme-border text-center">
+                        <p className="text-orange-500 font-semibold bg-orange-500/10 py-3 rounded-lg border border-orange-500/20">
+                            🔒 Group is closed because Admin left
+                        </p>
+                    </div>
+                ) : (
+                    <form onSubmit={handleSendMessage} className="w-full p-4 bg-theme-bg-tertiary border-t border-theme-border flex items-center relative">
+                        {/* File Preview */}
+                        {file && (
+                            <div className="absolute bottom-full left-4 bg-theme-bg-tertiary border border-theme-border rounded-lg p-2 shadow-lg mb-2">
+                                <div className="relative">
+                                    {file.type.startsWith('image/') ? (
+                                        <img src={previewUrl} alt="Preview" className="h-32 rounded-lg object-contain" />
+                                    ) : (
+                                        <video src={previewUrl} controls className="h-32 rounded-lg" />
+                                    )}
+                                    <button
+                                        type="button"
+                                        onClick={clearFile}
+                                        className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 shadow-md"
+                                    >
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4">
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
+                                    </button>
+                                </div>
+                                <p className="text-xs text-center text-theme-text-muted mt-1 truncate max-w-[200px]">{file.name}</p>
                             </div>
-                            <p className="text-xs text-center text-theme-text-muted mt-1 truncate max-w-[200px]">{file.name}</p>
-                        </div>
-                    )}
-                    <input
-                        type="file"
-                        accept="image/*,video/mp4,video/webm"
-                        ref={fileInputRef}
-                        style={{ display: 'none' }}
-                        onChange={handleFileChange}
-                    />
-                    <button
-                        type="button"
-                        onClick={() => fileInputRef.current.click()}
-                        className="bg-theme-bg-secondary hover:bg-theme-bg-tertiary text-theme-text-secondary rounded-full p-2 md:p-3 mr-2 md:mr-3 transition duration-200"
-                        title="Attach File"
-                    >
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 md:w-6 md:h-6">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M18.375 12.739l-7.693 7.693a4.5 4.5 0 01-6.364-6.364l10.94-10.94A3 3 0 1119.5 7.372L8.552 18.32m.009-.01l-.01.01m5.699-9.941l-7.81 7.81a1.5 1.5 0 002.112 2.13" />
-                        </svg>
-                    </button>
-                    <input
-                        type="text"
-                        placeholder="Type a message..."
-                        value={newMessage}
-                        onChange={(e) => setNewMessage(e.target.value)}
-                        className="flex-1 bg-theme-bg-secondary text-theme-text-primary rounded-full px-4 md:px-5 py-2 md:py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 mr-2 md:mr-3 text-sm md:text-base placeholder-theme-text-muted"
-                    />
-                    <button
-                        type="submit"
-                        className="bg-blue-600 hover:bg-blue-700 text-white rounded-full p-2 md:p-3 transition duration-200"
-                    >
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5 md:w-6 md:h-6">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
-                        </svg>
-                    </button>
-                </form>
-            )
-            }
+                        )}
+                        <input
+                            type="file"
+                            accept="image/*,video/mp4,video/webm"
+                            ref={fileInputRef}
+                            style={{ display: 'none' }}
+                            onChange={handleFileChange}
+                        />
+                        <button
+                            type="button"
+                            onClick={() => fileInputRef.current.click()}
+                            className="bg-theme-bg-secondary hover:bg-theme-bg-tertiary text-theme-text-secondary rounded-full p-2 md:p-3 mr-2 md:mr-3 transition duration-200"
+                            title="Attach File"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 md:w-6 md:h-6">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M18.375 12.739l-7.693 7.693a4.5 4.5 0 01-6.364-6.364l10.94-10.94A3 3 0 1119.5 7.372L8.552 18.32m.009-.01l-.01.01m5.699-9.941l-7.81 7.81a1.5 1.5 0 002.112 2.13" />
+                            </svg>
+                        </button>
+                        <input
+                            type="text"
+                            placeholder="Type a message..."
+                            value={newMessage}
+                            onChange={(e) => setNewMessage(e.target.value)}
+                            className="flex-1 bg-theme-bg-secondary text-theme-text-primary rounded-full px-4 md:px-5 py-2 md:py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 mr-2 md:mr-3 text-sm md:text-base placeholder-theme-text-muted"
+                        />
+                        <button
+                            type="submit"
+                            className="bg-blue-600 hover:bg-blue-700 text-white rounded-full p-2 md:p-3 transition duration-200"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5 md:w-6 md:h-6">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
+                            </svg>
+                        </button>
+                    </form>
+                )
+                }
+            </div>
             <UpdateGroupChatModal
                 isOpen={updateModalOpen}
                 onClose={() => setUpdateModalOpen(false)}

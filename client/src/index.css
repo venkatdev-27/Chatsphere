@@ -41,6 +41,14 @@ body {
   @apply font-sans;
 }
 
+html,
+body,
+#root {
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
 /* Custom Scrollbar */
 .custom-scrollbar {
   scroll-behavior: smooth;

@@ -93,7 +93,6 @@ const Message = ({ message, isGroupChat }) => {
     return (
         <div
             className={`flex ${isSender ? 'justify-end' : 'justify-start'} mb-4 relative group`}
-            {...longPressHandlers}
             onMouseEnter={() => setShowThreeDots(true)}
             onMouseLeave={() => setShowThreeDots(false)}
         >
@@ -107,12 +106,27 @@ const Message = ({ message, isGroupChat }) => {
 
                 <div className="relative">
                     {/* Three dots menu button (desktop only) */}
-                    {showThreeDots && !showMenu && (
+                    {/* Three dots menu button */}
+                    {/* Three dots menu button */}
+                    {!showMenu && (
                         <button
-                            onClick={() => setShowMenu(true)}
+                            onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                setShowMenu(true);
+                            }}
+                            onMouseDown={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                            }}
+                            onTouchStart={(e) => {
+                                e.stopPropagation();
+                            }}
                             className={`absolute top-1 ${isSender ? 'left-[-30px]' : 'right-[-30px]'} 
                                 bg-theme-bg-tertiary hover:bg-theme-bg-secondary text-theme-text-primary rounded-full p-1 
-                                opacity-0 group-hover:opacity-100 transition-opacity z-10 hidden sm:block`}
+                                shadow-sm z-10 transition-opacity duration-200
+                                opacity-100 sm:opacity-0 sm:group-hover:opacity-100`}
+                            type="button"
                         >
                             <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 16 16">
                                 <circle cx="8" cy="2" r="1.5" />
@@ -155,7 +169,9 @@ const Message = ({ message, isGroupChat }) => {
 
                     {/* Message Bubble */}
                     <div
-                        className={`px-4 py-2 rounded-lg ${isSender
+                        {...longPressHandlers}
+                        onContextMenu={(e) => e.preventDefault()}
+                        className={`px-4 py-2 rounded-lg select-none cursor-pointer transition-colors ${isSender
                             ? 'bg-theme-bubble-sender text-white rounded-br-none'
                             : 'bg-theme-bg-tertiary text-theme-text-primary rounded-bl-none'
                             }`}

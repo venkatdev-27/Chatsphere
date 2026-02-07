@@ -14,8 +14,6 @@ const useLongPress = (onLongPress, delay = 500) => {
 
   const start = useCallback(
     (event) => {
-      event.preventDefault();
-      
       isLongPressRef.current = false;
       
       timeoutRef.current = setTimeout(() => {
