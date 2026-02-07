@@ -11,7 +11,12 @@ const getBaseUrl = () => {
     return apiUrl.replace(/\/api\/?$/, "");
   }
 
-  return "http://localhost:5000";
+  // Fallback: use localhost only if on localhost, otherwise relative
+  if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+      return "http://localhost:5000";
+  }
+  
+  return "/";
 };
 
 const ENDPOINT = getBaseUrl();

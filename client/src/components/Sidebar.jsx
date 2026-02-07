@@ -101,9 +101,9 @@ const Sidebar = ({ onChatSelect }) => {
     return (
         <div className="w-full h-full bg-theme-bg-secondary border-r border-theme-border flex flex-col relative">
             {/* Header */}
-            <div className="p-4 bg-theme-bg-tertiary border-b border-theme-border flex justify-between items-center shadow-sm">
+            <div className="p-3 md:p-4 bg-theme-bg-tertiary border-b border-theme-border flex justify-between items-center shadow-sm">
                 <div className="flex items-center gap-3">
-                    <h2 className="text-xl font-bold text-theme-text-primary tracking-wide">Chats</h2>
+                    <h2 className="text-lg md:text-xl font-bold text-theme-text-primary tracking-wide">Chats</h2>
                 </div>
                 <div className="flex items-center gap-2">
                     {/* Theme Toggle */}
