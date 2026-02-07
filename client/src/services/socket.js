@@ -40,7 +40,12 @@ export const connectSocket = () => {
   return socket;
 };
 
-export const getSocket = () => socket;
+export const getSocket = () => {
+  if (!socket) {
+    return connectSocket();
+  }
+  return socket;
+};
 
 export const disconnectSocket = () => {
   if (socket) {

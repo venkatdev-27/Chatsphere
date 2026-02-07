@@ -52,11 +52,13 @@ const Message = ({ message, isGroupChat }) => {
             await dispatch(deleteMessageForEveryone(message._id)).unwrap();
 
             const socket = getSocket();
-            socket.emit('delete_message', {
-                room: message.chat._id || message.chat,
-                messageId: message._id,
-                isDeletedForEveryone: true
-            });
+            if (socket) {
+                socket.emit('delete_message', {
+                    room: message.chat._id || message.chat,
+                    messageId: message._id,
+                    isDeletedForEveryone: true
+                });
+            }
 
             setShowMenu(false);
         } catch (error) {

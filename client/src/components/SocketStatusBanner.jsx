@@ -15,6 +15,8 @@ const SocketStatusBanner = () => {
         const handleDisconnect = () => setStatus('disconnected');
         const handleConnectError = () => setStatus('disconnected');
 
+        if (!socket) return;
+
         if (socket.connected) {
             setStatus('connected');
         } else {
