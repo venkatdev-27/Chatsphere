@@ -5,8 +5,10 @@ const { sendMessage, allMessages, markMessagesAsRead, deleteMessageForMe, delete
 const router = express.Router();
 
 const upload = require('../middleware/uploadMiddleware');
+const rateLimit = require('../middleware/rateLimitMiddleware');
 
-router.route('/').post(protect, upload.single('file'), sendMessage);
+// Rate limit: 30 messages per 1 minute per user
+router.route('/').post(protect, rateLimit(30, 60), upload.single('file'), sendMessage);
 router.route('/:chatId').get(protect, allMessages);
 router.route('/read/:chatId').put(protect, markMessagesAsRead);
 router.route('/deleteForMe').put(protect, deleteMessageForMe);
