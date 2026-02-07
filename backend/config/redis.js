@@ -1,24 +1,25 @@
-const redis = require('redis');
+const redis = require("redis");
 
 const client = redis.createClient({
-  url: process.env.REDIS_URL || 'redis://localhost:6379',
+  url: process.env.REDIS_URI, // ✅ FIXED (match .env)
   socket: {
     reconnectStrategy: (retries) => {
       if (retries > 5) {
-        return new Error('Redis connection failed');
+        console.error("❌ Redis reconnect failed");
+        return new Error("Redis connection failed");
       }
-      return Math.min(retries * 50, 1000);
+      return Math.min(retries * 100, 1000);
     }
   }
 });
 
-client.on('error', (err) => {
-    if (err.code === 'ECONNREFUSED') {
-    } else {
-    }
+client.on("connect", () => {
+  console.log("✅ Redis Client Connected");
 });
 
-client.on('connect', () => console.log('Redis Client Connected'));
+client.on("error", (err) => {
+  console.error("❌ Redis Error:", err.message);
+});
 
 const connectRedis = async () => {
   try {
@@ -26,8 +27,7 @@ const connectRedis = async () => {
       await client.connect();
     }
   } catch (error) {
-    
-    console.warn('Redis connection failed. Features requiring Redis will be disabled.');
+    console.warn("⚠️ Redis connection failed. Redis features disabled.");
   }
 };
 
