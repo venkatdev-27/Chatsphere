@@ -7,6 +7,7 @@ import { getSocket } from '../services/socket';
 import { addMessage, handleMessageDeleted } from '../redux/slices/messageSlice';
 import UpdateGroupChatModal from './UpdateGroupChatModal';
 import { formatDateLabel, isSameDay } from '../utils/dateHelper';
+import { getProfilePicUrl } from '../utils/authHelper';
 
 const ChatBox = ({ onBackClick }) => {
     const dispatch = useDispatch();
@@ -145,8 +146,8 @@ const ChatBox = ({ onBackClick }) => {
                     <div className="flex items-center gap-3">
                         <img
                             src={!selectedChat.isGroupChat
-                                ? selectedChat.users.find((u) => u._id !== user._id)?.pic
-                                : (selectedChat.groupProfilePic || 'https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg')}
+                                ? getProfilePicUrl(selectedChat.users.find((u) => u._id !== user._id)?.pic)
+                                : getProfilePicUrl(selectedChat.groupProfilePic)}
                             alt="Profile"
                             className="w-10 h-10 rounded-full object-cover border border-theme-border"
                         />

@@ -4,6 +4,7 @@ import { createGroupChat } from '../redux/thunks/chatThunks';
 import { searchUsers } from '../redux/thunks/authThunks';
 import { clearSearchResults } from '../redux/slices/authSlice';
 import { toast } from 'react-toastify';
+import { getProfilePicUrl } from '../utils/authHelper';
 
 const GroupChatModal = ({ isOpen, onClose }) => {
     const dispatch = useDispatch();
@@ -106,7 +107,7 @@ const GroupChatModal = ({ isOpen, onClose }) => {
                             onClick={() => handleGroup(user)}
                             className="flex items-center gap-3 p-2 hover:bg-gray-700 rounded cursor-pointer transition-colors"
                         >
-                            <img src={user.pic} alt={user.username} className="w-8 h-8 rounded-full" />
+                            <img src={getProfilePicUrl(user.pic)} alt={user.username} className="w-8 h-8 rounded-full" />
                             <div>
                                 <p className="text-white font-medium">{user.username}</p>
                                 <p className="text-xs text-gray-400">{user.email}</p>

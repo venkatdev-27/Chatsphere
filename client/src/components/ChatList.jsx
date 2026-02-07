@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { setSelectedChat } from '../redux/slices/chatSlice';
 import { deleteChat } from '../redux/thunks/chatThunks';
 import useLongPress from '../hooks/useLongPress';
+import { getProfilePicUrl } from '../utils/authHelper';
 
 const ChatList = ({ chats, onChatSelect }) => {
     const dispatch = useDispatch();
@@ -137,7 +138,7 @@ const ChatItem = ({ chat, sender, isSelected, onSelect, onLongPress, onThreeDots
             {chat.isGroupChat ? (
                 chat.groupProfilePic ? (
                     <img
-                        src={chat.groupProfilePic}
+                        src={getProfilePicUrl(chat.groupProfilePic)}
                         alt={chat.chatName}
                         className="w-10 h-10 rounded-full mr-3 object-cover"
                     />
@@ -151,7 +152,7 @@ const ChatItem = ({ chat, sender, isSelected, onSelect, onLongPress, onThreeDots
             ) : (
                 sender && (
                     <img
-                        src={sender.pic}
+                        src={getProfilePicUrl(sender.pic)}
                         alt={sender.username}
                         className="w-10 h-10 rounded-full mr-3 object-cover"
                     />

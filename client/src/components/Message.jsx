@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import useLongPress from '../hooks/useLongPress';
 import { deleteMessageForMe, deleteMessageForEveryone } from '../redux/thunks/messageThunks';
 import { getSocket } from '../services/socket';
+import { getProfilePicUrl } from '../utils/authHelper';
 
 const Message = ({ message, isGroupChat }) => {
     const { user } = useSelector((state) => state.auth);
@@ -162,9 +163,9 @@ const Message = ({ message, isGroupChat }) => {
                         {message.file && (
                             <div className="mb-2">
                                 {message.fileType === 'video' ? (
-                                    <video src={message.file} controls className="max-w-full rounded-lg max-h-60" />
+                                    <video src={getProfilePicUrl(message.file)} controls className="max-w-full rounded-lg max-h-60" />
                                 ) : (
-                                    <img src={message.file} alt="attachment" className="max-w-full rounded-lg max-h-60" />
+                                    <img src={getProfilePicUrl(message.file)} alt="attachment" className="max-w-full rounded-lg max-h-60" />
                                 )}
                             </div>
                         )}

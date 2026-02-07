@@ -24,3 +24,14 @@ export const removeAuthData = () => {
 export const isAuthenticated = () => {
   return !!getToken();
 };
+
+export const getProfilePicUrl = (picPath) => {
+  if (!picPath) return "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg";
+  if (picPath.startsWith("http") || picPath.startsWith("https")) {
+    return picPath;
+  }
+  const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:5000";
+  // Remove /api from the end of baseUrl if it exists, as uploads are usually at root
+  const hostUrl = baseUrl.replace(/\/api\/?$/, "");
+  return `${hostUrl}/${picPath}`;
+};

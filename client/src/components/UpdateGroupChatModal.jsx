@@ -4,6 +4,7 @@ import { renameGroup, addToGroup, removeFromGroup } from '../redux/thunks/chatTh
 import { searchUsers } from '../redux/thunks/authThunks';
 import { clearSearchResults } from '../redux/slices/authSlice';
 import { toast } from 'react-toastify';
+import { getProfilePicUrl } from '../utils/authHelper';
 
 const UpdateGroupChatModal = ({ isOpen, onClose, fetchMessages }) => {
     const dispatch = useDispatch();
@@ -151,7 +152,7 @@ const UpdateGroupChatModal = ({ isOpen, onClose, fetchMessages }) => {
                                     onClick={() => handleAddUser(user)}
                                     className="flex items-center gap-3 p-2 hover:bg-gray-700 rounded cursor-pointer transition-colors"
                                 >
-                                    <img src={user.pic} alt={user.username} className="w-8 h-8 rounded-full" />
+                                    <img src={getProfilePicUrl(user.pic)} alt={user.username} className="w-8 h-8 rounded-full" />
                                     <div>
                                         <p className="text-white font-medium">{user.username}</p>
                                         <p className="text-xs text-gray-400">{user.email}</p>
@@ -167,7 +168,7 @@ const UpdateGroupChatModal = ({ isOpen, onClose, fetchMessages }) => {
                         {selectedChat.users.map((u) => (
                             <div key={u._id} className="flex items-center justify-between p-2 bg-gray-700/50 rounded-lg hover:bg-gray-700 transition-colors">
                                 <div className="flex items-center gap-3 overflow-hidden">
-                                    <img src={u.pic} alt={u.username} className="w-10 h-10 rounded-full object-cover flex-shrink-0" />
+                                    <img src={getProfilePicUrl(u.pic)} alt={u.username} className="w-10 h-10 rounded-full object-cover flex-shrink-0" />
                                     <div className="flex flex-col min-w-0">
                                         <span className="text-white font-medium text-sm truncate">{u.username} {u._id === selectedChat.groupAdmin._id && <span className="text-xs text-yellow-500 ml-1">(Admin)</span>}</span>
                                         <span className="text-gray-400 text-xs truncate">{u.email}</span>
@@ -198,7 +199,7 @@ const UpdateGroupChatModal = ({ isOpen, onClose, fetchMessages }) => {
                                 {selectedChat.removedUsers.map((u) => (
                                     <div key={u._id} className="flex items-center justify-between p-2 bg-gray-700/30 rounded-lg opacity-75">
                                         <div className="flex items-center gap-3 overflow-hidden">
-                                            <img src={u.pic} alt={u.username} className="w-8 h-8 rounded-full object-cover grayscale flex-shrink-0" />
+                                            <img src={getProfilePicUrl(u.pic)} alt={u.username} className="w-8 h-8 rounded-full object-cover grayscale flex-shrink-0" />
                                             <div className="flex flex-col min-w-0">
                                                 <span className="text-gray-300 font-medium text-sm truncate">{u.username}</span>
                                                 <span className="text-gray-500 text-xs truncate">{u.email}</span>

@@ -135,7 +135,7 @@ const updateProfilePic = async (req, res) => {
 
     const updatedUser = await User.findByIdAndUpdate(
       req.user._id,
-      { pic: `${baseUrl}/${filePath}` },
+      { pic: filePath },
       { new: true, select: "-password" }
     );
 

@@ -8,7 +8,9 @@ import { disconnectSocket } from '../services/socket';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import GroupChatModal from './GroupChatModal';
+import GroupChatModal from './GroupChatModal';
 import ThemeToggle from './ThemeToggle';
+import { getProfilePicUrl } from '../utils/authHelper';
 
 const Sidebar = ({ onChatSelect }) => {
     const dispatch = useDispatch();
@@ -131,7 +133,7 @@ const Sidebar = ({ onChatSelect }) => {
                         <div className="flex flex-col items-center gap-3 w-full">
                             <div className="relative group/profile">
                                 <img
-                                    src={user?.pic}
+                                    src={getProfilePicUrl(user?.pic)}
                                     alt="Profile"
                                     className="w-20 h-20 rounded-full border-2 border-transparent hover:border-theme-primary transition-all object-cover"
                                     title='Your profile picture'
@@ -197,7 +199,7 @@ const Sidebar = ({ onChatSelect }) => {
                                 onClick={() => accessUserChat(u._id)}
                                 className="flex items-center p-2 cursor-pointer hover:bg-theme-bg-secondary transition-colors"
                             >
-                                <img src={u.pic} alt={u.username} className="w-8 h-8 rounded-full mr-3 object-cover" />
+                                <img src={getProfilePicUrl(u.pic)} alt={u.username} className="w-8 h-8 rounded-full mr-3 object-cover" />
                                 <div>
                                     <p className="text-sm font-semibold text-theme-text-primary">{u.username}</p>
                                     <p className="text-xs text-theme-text-secondary">{u.email}</p>
@@ -221,7 +223,7 @@ const Sidebar = ({ onChatSelect }) => {
                             >
                                 <div className="relative">
                                     <img
-                                        src={u.pic}
+                                        src={getProfilePicUrl(u.pic)}
                                         alt={u.username}
                                         className="w-10 h-10 rounded-full border-2 border-green-500 object-cover group-hover:scale-105 transition-transform"
                                     />
