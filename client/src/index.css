@@ -15,6 +15,8 @@
   --primary-hover: #2563EB;
   --success-color: #10B981;
   --danger-color: #EF4444;
+  --chat-bubble-sender: #1D4ED8;
+  /* Darker blue for less contrast in dark mode */
 }
 
 :root[data-theme="light"] {
@@ -29,6 +31,8 @@
   --primary-hover: #1D4ED8;
   --success-color: #059669;
   --danger-color: #DC2626;
+  --chat-bubble-sender: #2563EB;
+  /* Same as primary-color in light mode */
 }
 
 body {

@@ -16,6 +16,7 @@ export default {
         'theme-border': 'var(--border-color)',
         'theme-primary': 'var(--primary-color)',
         'theme-primary-hover': 'var(--primary-hover)',
+        'theme-bubble-sender': 'var(--chat-bubble-sender)',
       },
     },
   },

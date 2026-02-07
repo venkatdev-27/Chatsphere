@@ -156,7 +156,7 @@ const Message = ({ message, isGroupChat }) => {
                     {/* Message Bubble */}
                     <div
                         className={`px-4 py-2 rounded-lg ${isSender
-                            ? 'bg-theme-primary text-white rounded-br-none'
+                            ? 'bg-theme-bubble-sender text-white rounded-br-none'
                             : 'bg-theme-bg-tertiary text-theme-text-primary rounded-bl-none'
                             }`}
                     >
