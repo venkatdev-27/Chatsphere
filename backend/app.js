@@ -11,17 +11,30 @@ const { notFound, errorHandler } = require('./middleware/errorMiddleware');
 const app = express();
 
 app.use(compression({ threshold: 1024 }));
-
 const allowedOrigins = [
-  'http://localhost:5173',
-  'http://localhost:3000',
-  process.env.FRONTEND_URL
-].filter(Boolean);
+  "http://localhost:5173",
+  "https://chatsphere-25jb.onrender.com",
+];
 
 app.use(cors({
-  origin: allowedOrigins,
-  credentials: true
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, origin);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: [
+    "Content-Type",
+    "Authorization",
+  ],
+  credentials: true,
 }));
+
+// ✅ MUST be before routes
+app.options("*", cors());
+
 
 app.use(express.json({ limit: '10mb' }));
 
