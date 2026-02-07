@@ -1,0 +1,70 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Theme CSS Variables */
+:root[data-theme="dark"] {
+  --bg-primary: #0F172A;
+  --bg-secondary: #111827;
+  --bg-tertiary: #1F2937;
+  --text-primary: #F9FAFB;
+  --text-secondary: #9CA3AF;
+  --text-muted: #6B7280;
+  --border-color: #1F2937;
+  --primary-color: #3B82F6;
+  --primary-hover: #2563EB;
+  --success-color: #10B981;
+  --danger-color: #EF4444;
+}
+
+:root[data-theme="light"] {
+  --bg-primary: #FFFFFF;
+  --bg-secondary: #F3F4F6;
+  --bg-tertiary: #E5E7EB;
+  --text-primary: #111827;
+  --text-secondary: #6B7280;
+  --text-muted: #9CA3AF;
+  --border-color: #E5E7EB;
+  --primary-color: #2563EB;
+  --primary-hover: #1D4ED8;
+  --success-color: #059669;
+  --danger-color: #DC2626;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  @apply font-sans;
+}
+
+/* Custom Scrollbar */
+.custom-scrollbar {
+  scroll-behavior: smooth;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: var(--bg-tertiary);
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--text-muted);
+  border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary);
+}
+
+/* Mobile specific adjustments */
+@media (max-width: 768px) {
+  .chat-container {
+    height: 100vh;
+    height: 100dvh;
+    /* Dynamic viewport height for mobile browsers */
+  }
+}

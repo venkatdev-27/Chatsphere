@@ -1,0 +1,34 @@
+# Node
+node_modules
+npm-debug.log
+yarn.lock
+pnpm-lock.yaml
+
+# Environment files
+.env
+.env.*
+
+# Git
+.git
+.gitignore
+
+# OS / Editor
+.DS_Store
+.vscode
+.idea
+
+# Logs
+logs
+*.log
+
+# Docker
+Dockerfile
+docker-compose.yml
+
+# Frontend
+client/node_modules
+client/build
+
+# Backend
+backend/node_modules
+backend/dist
