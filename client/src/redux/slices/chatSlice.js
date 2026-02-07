@@ -42,6 +42,24 @@ const chatSlice = createSlice({
     removeNotification: (state, action) => {
       state.notification = state.notification.filter(n => n._id !== action.payload._id);
     },
+    updateUserInChats: (state, action) => {
+        const updatedUser = action.payload;
+        // Update in chats list
+        state.chats = state.chats.map(chat => {
+            const updatedUsers = chat.users.map(u => u._id === updatedUser._id ? { ...u, ...updatedUser } : u);
+            let updatedLatestMessage = chat.latestMessage;
+             if (chat.latestMessage && chat.latestMessage.sender._id === updatedUser._id) {
+                 updatedLatestMessage = { ...chat.latestMessage, sender: { ...chat.latestMessage.sender, ...updatedUser } };
+             }
+            return { ...chat, users: updatedUsers, latestMessage: updatedLatestMessage };
+        });
+        
+        // Update selected chat
+        if (state.selectedChat) {
+             const updatedUsers = state.selectedChat.users.map(u => u._id === updatedUser._id ? { ...u, ...updatedUser } : u);
+             state.selectedChat = { ...state.selectedChat, users: updatedUsers };
+        }
+    },
     updateChatLatestMessage: (state, action) => {
       const chatIndex = state.chats.findIndex(c => c._id === action.payload.chat._id || c._id === action.payload.chat);
       if (chatIndex !== -1) {
@@ -128,6 +146,7 @@ export const {
   addUserOnline,
   removeUserOnline,
   updateChatLatestMessage,
+  updateUserInChats,
   clearChatError,
 } = chatSlice.actions;
 

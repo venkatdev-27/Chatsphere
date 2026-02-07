@@ -1,7 +1,9 @@
 const Message = require('../models/Message');
 const User = require('../models/userModel');
 const Chat = require('../models/Chat');
+const Chat = require('../models/Chat');
 const { client } = require('../config/redis');
+const { getIO } = require('../services/socketService');
 
 // @desc    Send New Message 📨
 // @route   POST /api/message
@@ -207,6 +209,18 @@ const deleteMessageForEveryone = async (req, res) => {
       });
     }
 
+    const io = getIO();
+    // Emit to all users in the chat room
+    if (chat && chat.users) {
+        chat.users.forEach(user => {
+            io.to(user._id.toString()).emit('message_deleted', {
+                messageId,
+                chatId: message.chat._id,
+                isDeletedForEveryone: true
+            });
+        });
+    }
+
     res.json({ success: true, messageId, message });
   } catch (error) {
     res.status(400);
@@ -238,4 +252,59 @@ const clearChat = async (req, res) => {
   }
 };
 
-module.exports = { sendMessage, allMessages, markMessagesAsRead, deleteMessageForMe, deleteMessageForEveryone, clearChat };
+// @desc    Edit Message ✏️
+// @route   PUT /api/message/edit
+// @access  Protected
+const editMessage = async (req, res) => {
+  try {
+    const { messageId, content } = req.body;
+
+    if (!content) {
+      res.status(400);
+      throw new Error("Content is required");
+    }
+
+    const message = await Message.findById(messageId).populate("chat");
+
+    if (!message) {
+      res.status(404);
+      throw new Error("Message not found");
+    }
+
+    const isSender = message.sender.toString() === req.user._id.toString();
+
+    if (!isSender) {
+      res.status(403);
+      throw new Error("Only sender can edit message");
+    }
+
+    message.content = content;
+    const updatedMessage = await message.save();
+    
+    // Populate sender for frontend display consistency if needed
+    await updatedMessage.populate("sender", "username pic email");
+    await updatedMessage.populate("chat");
+
+    await client.del(`messages:${message.chat._id}:latest`);
+    
+    // Emit socket event
+    const io = getIO();
+    if (message.chat && message.chat.users) {
+        
+        // Let's re-fetch chat to be sure we have users
+        const fullChat = await Chat.findById(message.chat._id);
+        if (fullChat && fullChat.users) {
+            fullChat.users.forEach(userId => {
+                 io.to(userId.toString()).emit('message_updated', updatedMessage);
+            });
+        }
+    }
+
+    res.json(updatedMessage);
+  } catch (error) {
+    res.status(400);
+    throw new Error(error.message);
+  }
+};
+
+module.exports = { sendMessage, allMessages, markMessagesAsRead, deleteMessageForMe, deleteMessageForEveryone, clearChat, editMessage };

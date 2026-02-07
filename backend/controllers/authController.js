@@ -1,6 +1,7 @@
 const User = require('../models/userModel');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
+const { getIO } = require('../services/socketService');
 
 const generateToken = (id) =>
   jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '30d' });
@@ -138,6 +139,10 @@ const updateProfilePic = async (req, res) => {
       { pic: filePath },
       { new: true, select: "-password" }
     );
+
+    const io = getIO();
+    // Emit to all connected users so they can update their contact lists/chats
+    io.emit('user_updated', updatedUser);
 
     res.json(updatedUser);
   } catch (error) {

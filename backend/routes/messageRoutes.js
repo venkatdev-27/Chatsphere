@@ -1,6 +1,6 @@
 const express = require('express');
 const { protect } = require('../middleware/authMiddleware'); // Assuming this exists or using a new one if not
-const { sendMessage, allMessages, markMessagesAsRead, deleteMessageForMe, deleteMessageForEveryone, clearChat } = require('../controllers/messageController');
+const { sendMessage, allMessages, markMessagesAsRead, deleteMessageForMe, deleteMessageForEveryone, clearChat, editMessage } = require('../controllers/messageController');
 
 const router = express.Router();
 
@@ -14,5 +14,6 @@ router.route('/read/:chatId').put(protect, markMessagesAsRead);
 router.route('/deleteForMe').put(protect, deleteMessageForMe);
 router.route('/deleteForEveryone').put(protect, deleteMessageForEveryone);
 router.route('/clearChat').put(protect, clearChat);
+router.route('/edit').put(protect, editMessage);
 
 module.exports = router;
