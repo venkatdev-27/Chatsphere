@@ -118,7 +118,7 @@ const login = async (req, res) => {
 // @desc    Update user profile picture 🖼️
 // @route   POST /api/auth/profile-pic
 // @access  Private
-const baseUrl = `${req.protocol}://${req.get("host")}`;
+
 
 
 const updateProfilePic = async (req, res) => {
