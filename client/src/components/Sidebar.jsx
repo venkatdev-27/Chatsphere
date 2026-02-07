@@ -8,7 +8,6 @@ import { disconnectSocket } from '../services/socket';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import GroupChatModal from './GroupChatModal';
-import GroupChatModal from './GroupChatModal';
 import ThemeToggle from './ThemeToggle';
 import { getProfilePicUrl } from '../utils/authHelper';
 
