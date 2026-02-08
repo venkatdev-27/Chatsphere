@@ -5,6 +5,7 @@ import { clearError } from '../redux/slices/authSlice';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { LockOpen } from '@/components/animate-ui/icons/lock-open';
+import { StarsBackground } from '@/components/animate-ui/components/backgrounds/stars';
 
 const Login = () => {
     const [formData, setFormData] = useState({ mobile: '', password: '' });
@@ -60,95 +61,103 @@ const Login = () => {
     };
 
     return (
-        <div className="auth-scroll h-[100dvh] bg-slate-900 text-slate-200">
-            <div className="min-h-full px-4 py-8 pb-32 flex items-center justify-center">
-                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-md">
-                    <div className="bg-slate-800 p-8 rounded-2xl border border-slate-700 shadow-2xl">
+        <StarsBackground
+            starColor="#6B7280"
+            speed={200}
+            className="min-h-screen flex items-center justify-center p-4 bg-[radial-gradient(ellipse_at_bottom,_#1e293b_0%,_#0f172a_100%)]"
+        >
+            {/* Dark Overlay for Readability */}
+            <div className="absolute inset-0 bg-slate-950/40 backdrop-blur-[2px]" />
 
-                        <div className="mb-8 text-center">
-                            <h1 className="text-3xl font-bold text-white">ChatSphere</h1>
-                            <p className="text-slate-400">Welcome back! Please sign in.</p>
-                        </div>
-
-                        <form onSubmit={handleSubmit} className="space-y-6">
-
-                            {/* Mobile */}
-                            <motion.div animate={inputError === 'mobile' && shouldShake ? { x: [-10, 10, -10, 10, 0] } : {}}>
-                                <label className="text-sm text-slate-300">Mobile Number</label>
-                                <input
-                                    name="mobile"
-                                    value={formData.mobile}
-                                    onChange={handleChange}
-                                    className={`w-full px-4 py-3 mt-2 rounded-lg bg-slate-900 border ${inputError === 'mobile'
-                                        ? 'border-red-500 ring-2 ring-red-500/30'
-                                        : 'border-slate-700 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
-                                        } outline-none transition-all duration-200 text-white placeholder-slate-500`}
-                                    placeholder="Enter your mobile number"
-                                />
-                                {inputError === 'mobile' && (
-                                    <p className="text-red-500 text-xs mt-1">
-                                        {errorMessage || 'User not found'}
-                                    </p>
-                                )}
-
-                            </motion.div>
-
-                            {/* Password */}
-                            <motion.div animate={inputError === 'password' && shouldShake ? { x: [-10, 10, -10, 10, 0] } : {}}>
-                                <label className="text-sm text-slate-300">Password</label>
-                                <div className="relative mt-2">
-                                    <input
-                                        type={showPassword ? 'text' : 'password'}
-                                        name="password"
-                                        value={formData.password}
-                                        onChange={handleChange}
-                                        className={`w-full px-4 py-3 pr-10 rounded-lg bg-slate-900 border ${inputError === 'password'
-                                            ? 'border-red-500 ring-2 ring-red-500/30'
-                                            : 'border-slate-700 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
-                                            } outline-none transition-all duration-200 text-white placeholder-slate-500`}
-                                        placeholder="Enter your password"
-                                    />
-                                    <button
-                                        type="button"
-                                        onClick={() => setShowPassword(!showPassword)}
-                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white transition-colors p-1"
-                                    >
-                                        <LockOpen animateOnHover={true} />
-                                    </button>
-                                </div>
-                                {inputError === 'password' && (
-                                    <p className="text-red-500 text-xs mt-1">
-                                        {errorMessage || 'Password is incorrect'}
-                                    </p>
-                                )}
-                            </motion.div>
-
-                            {/* Button */}
-                            <motion.button
-                                type="submit"
-                                disabled={loading}
-                                animate={shouldShake && (!formData.mobile || !formData.password) ? { x: [-10, 10, -10, 10, 0] } : {}}
-                                whileHover={{ scale: 1.02 }}
-                                whileTap={{ scale: 0.98 }}
-                                className="w-full py-3 rounded-xl bg-blue-600 hover:bg-blue-500 font-bold text-white shadow-lg"
-                            >
-                                {loading ? 'Signing in…' : 'Sign In'}
-                            </motion.button>
-                        </form>
-
-                        <div className="mt-6 text-center">
-                            <p className="text-slate-400 text-sm">
-                                Don’t have an account?{' '}
-                                <Link to="/signup" className="text-blue-400 hover:underline">
-                                    Create account
-                                </Link>
-                            </p>
-                        </div>
-
+            {/* Login Card */}
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+                className="relative w-full max-w-md z-10"
+            >
+                <div className="bg-slate-800/30 backdrop-blur-xl rounded-2xl border border-slate-700/50 shadow-2xl p-8">
+                    {/* Header */}
+                    <div className="text-center mb-8">
+                        <h1 className="text-3xl font-bold text-slate-100 mb-2">Welcome Back</h1>
+                        <p className="text-slate-400 text-sm">Sign in to continue to your chats</p>
                     </div>
-                </motion.div>
-            </div>
-        </div>
+
+                    {/* Form */}
+                    <form onSubmit={handleSubmit} className="space-y-5">
+                        {/* Mobile Number */}
+                        <motion.div animate={inputError === 'mobile' && shouldShake ? { x: [-10, 10, -10, 10, 0] } : {}}>
+                            <label className="text-sm text-slate-300 font-medium">Mobile Number</label>
+                            <input
+                                type="tel"
+                                name="mobile"
+                                value={formData.mobile}
+                                onChange={handleChange}
+                                className={`w-full px-4 py-3 mt-2 rounded-lg bg-slate-900/60 border ${inputError === 'mobile'
+                                    ? 'border-red-500 ring-2 ring-red-500/30'
+                                    : 'border-slate-700/50 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
+                                    } outline-none transition-all duration-200 text-slate-100 placeholder-slate-500`}
+                                placeholder="Enter your mobile number"
+                            />
+                            {inputError === 'mobile' && (
+                                <p className="text-red-400 text-xs mt-1.5">
+                                    {errorMessage || 'Mobile number not found'}
+                                </p>
+                            )}
+                        </motion.div>
+
+                        {/* Password */}
+                        <motion.div animate={inputError === 'password' && shouldShake ? { x: [-10, 10, -10, 10, 0] } : {}}>
+                            <label className="text-sm text-slate-300 font-medium">Password</label>
+                            <div className="relative mt-2">
+                                <input
+                                    type={showPassword ? 'text' : 'password'}
+                                    name="password"
+                                    value={formData.password}
+                                    onChange={handleChange}
+                                    className={`w-full px-4 py-3 pr-12 rounded-lg bg-slate-900/60 border ${inputError === 'password'
+                                        ? 'border-red-500 ring-2 ring-red-500/30'
+                                        : 'border-slate-700/50 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
+                                        } outline-none transition-all duration-200 text-slate-100 placeholder-slate-500`}
+                                    placeholder="Enter your password"
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 transition-colors p-1"
+                                >
+                                    <LockOpen animateOnHover={true} />
+                                </button>
+                            </div>
+                            {inputError === 'password' && (
+                                <p className="text-red-400 text-xs mt-1.5">
+                                    {errorMessage || 'Password is incorrect'}
+                                </p>
+                            )}
+                        </motion.div>
+
+                        {/* Submit Button */}
+                        <button
+                            type="submit"
+                            disabled={loading}
+                            className="w-full py-3 mt-6 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-800 text-white font-semibold rounded-lg transition-all duration-200 shadow-lg shadow-blue-900/30 disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            {loading ? 'Signing In...' : 'Sign In'}
+                        </button>
+                    </form>
+
+                    {/* Footer */}
+                    <div className="mt-6 text-center">
+                        <p className="text-slate-400 text-sm">
+                            Don't have an account?{' '}
+                            <Link to="/signup" className="text-blue-500 hover:text-blue-400 font-medium transition-colors">
+                                Sign up
+                            </Link>
+                        </p>
+                    </div>
+                </div>
+            </motion.div>
+        </StarsBackground>
     );
 };
 
