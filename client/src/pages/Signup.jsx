@@ -63,7 +63,8 @@ const Signup = () => {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center px-4 py-8 bg-slate-900 text-slate-200">
+<div className=" min-h-screen overflow-y-auto px-4 py-8 bg-slate-900 text-slate-200  flex flex-col items-center justify-center md:overflow-hidden">
+
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
