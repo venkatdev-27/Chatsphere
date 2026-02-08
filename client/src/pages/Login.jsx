@@ -4,6 +4,7 @@ import { loginUser } from '../redux/thunks/authThunks';
 import { clearError } from '../redux/slices/authSlice';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { LockOpen } from '../components/animate-ui/icons/lock-open';
 
 const Login = () => {
     const [formData, setFormData] = useState({ mobile: '', password: '' });
@@ -95,17 +96,26 @@ const Login = () => {
                             {/* Password */}
                             <motion.div animate={inputError === 'password' && shouldShake ? { x: [-10, 10, -10, 10, 0] } : {}}>
                                 <label className="text-sm text-slate-300">Password</label>
-                                <input
-                                    type={showPassword ? 'text' : 'password'}
-                                    name="password"
-                                    value={formData.password}
-                                    onChange={handleChange}
-                                    className={`w-full px-4 py-3 mt-2 rounded-lg bg-slate-900 border ${inputError === 'password'
-                                        ? 'border-red-500 ring-2 ring-red-500/30'
-                                        : 'border-slate-700 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
-                                        } outline-none transition-all duration-200 text-white placeholder-slate-500`}
-                                    placeholder="Enter your password"
-                                />
+                                <div className="relative">
+                                    <input
+                                        type={showPassword ? 'text' : 'password'}
+                                        name="password"
+                                        value={formData.password}
+                                        onChange={handleChange}
+                                        className={`w-full px-4 py-3 mt-2 pr-10 rounded-lg bg-slate-900 border ${inputError === 'password'
+                                            ? 'border-red-500 ring-2 ring-red-500/30'
+                                            : 'border-slate-700 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
+                                            } outline-none transition-all duration-200 text-white placeholder-slate-500`}
+                                        placeholder="Enter your password"
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowPassword(!showPassword)}
+                                        className="absolute right-3 top-1/2 translate-y-1 text-slate-500 hover:text-white transition-colors p-1"
+                                    >
+                                        <LockOpen animateOnHover={true} />
+                                    </button>
+                                </div>
                                 {inputError === 'password' && (
                                     <p className="text-red-500 text-xs mt-1">
                                         {errorMessage || 'Password is incorrect'}

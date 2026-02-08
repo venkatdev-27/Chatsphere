@@ -4,6 +4,16 @@ import { setSelectedChat } from '../redux/slices/chatSlice';
 import { deleteChat } from '../redux/thunks/chatThunks';
 import useLongPress from '../hooks/useLongPress';
 import { getProfilePicUrl } from '../utils/authHelper';
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
 
 const ChatList = ({ chats, onChatSelect }) => {
     const dispatch = useDispatch();
@@ -34,55 +44,29 @@ const ChatList = ({ chats, onChatSelect }) => {
         setMenuChat(chat);
     };
 
-const handleThreeDotsClick = (chat, event) => {
-  event.preventDefault();
-  event.stopPropagation();
-
-    const button = event.currentTarget;
-  if (!button) return;
-
-  const rect = button.getBoundingClientRect();
-
-  const MENU_WIDTH = 160;
-  const PADDING = 8;
-
-  const left = Math.min(
-    window.innerWidth - MENU_WIDTH - PADDING,
-    Math.max(PADDING, rect.left)
-  );
-
-  const top = rect.bottom + window.scrollY + 6;
-
-  setMenuPosition({ top, left });
-
-  setMenuChat((prev) => (
-    prev?._id === chat._id ? null : chat
-  ));
-};
-
     const handleDeleteChat = async (e) => {
-        e.stopPropagation(); // Prevent bubbling when clicking delete
+        if (e) e.stopPropagation(); // Prevent bubbling when clicking delete
         if (menuChat) {
             await dispatch(deleteChat(menuChat._id));
             setMenuChat(null);
         }
     };
 
-useEffect(() => {
-  const handleClickOutside = (e) => {
-    if (menuRef.current && !menuRef.current.contains(e.target)) {
-      setMenuChat(null);
-    }
-  };
+    useEffect(() => {
+        const handleClickOutside = (e) => {
+            if (menuRef.current && !menuRef.current.contains(e.target)) {
+                setMenuChat(null);
+            }
+        };
 
-  if (menuChat) {
-    document.addEventListener('pointerdown', handleClickOutside);
-  }
+        if (menuChat) {
+            document.addEventListener('pointerdown', handleClickOutside);
+        }
 
-  return () => {
-    document.removeEventListener('pointerdown', handleClickOutside);
-  };
-}, [menuChat]);
+        return () => {
+            document.removeEventListener('pointerdown', handleClickOutside);
+        };
+    }, [menuChat]);
 
 
     return (
@@ -91,46 +75,41 @@ useEffect(() => {
                 const sender = !chat.isGroupChat ? getSender(user, chat.users) : null;
 
                 return (
-                   <ChatItem
+                    <ChatItem
                         key={chat._id}
                         chat={chat}
-                         sender={sender}
+                        sender={sender}
                         isSelected={selectedChat?._id === chat._id}
                         onSelect={handleChatSelect}
                         onLongPress={handleLongPress}
-                        onThreeDotsClick={handleThreeDotsClick}
                         menuChat={menuChat}
-                          />
+                    />
 
                 );
             })}
 
-            {/* Context Menu */}
-            {menuChat && (
-                <div
-                    ref={menuRef}
-                    className="fixed z-50 bg-theme-bg-tertiary border border-theme-border rounded-lg shadow-2xl py-2 min-w-[160px]"
-                    style={{
-                        top: `${menuPosition.top}px`,
-                        left: `${menuPosition.left}px`,
-                    }}
-                >
-                    <button
-                        onClick={handleDeleteChat}
-                        className="w-full px-4 py-2 text-left text-sm hover:bg-theme-bg-secondary transition-colors text-red-500 hover:text-red-600 flex items-center gap-2"
-                    >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                        </svg>
-                        Delete Chat
-                    </button>
-                </div>
-            )}
+            {/* Delete Confirmation Dialog */}
+            <AlertDialog open={!!menuChat} onOpenChange={(open) => !open && setMenuChat(null)}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            This action cannot be undone. This will permanently delete this chat
+                            and remove it from your list.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel onClick={() => setMenuChat(null)}>Cancel</AlertDialogCancel>
+                        <AlertDialogAction onClick={handleDeleteChat} className="bg-red-600 hover:bg-red-700">Delete</AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </div>
     );
 };
 
-const ChatItem = ({ chat, sender, isSelected, onSelect, onThreeDotsClick, menuChat  }) => {
+const ChatItem = ({ chat, sender, isSelected, onSelect, onLongPress, menuChat }) => {
+    const longPressEvent = useLongPress((e) => onLongPress(chat, e), { delay: 500 });
 
     return (
         <div
@@ -138,16 +117,16 @@ const ChatItem = ({ chat, sender, isSelected, onSelect, onThreeDotsClick, menuCh
                 ? 'bg-theme-primary text-white'
                 : 'bg-theme-bg-secondary hover:bg-theme-bg-tertiary text-theme-text-primary'
                 }`}
-          onClick={(e) => {
-  if (
-    e.target.closest('[data-menu-btn]') ||
-    menuChat?._id === chat._id
- ) {
-    return;
-  }
-  onSelect(chat);
-}}
-
+            onClick={(e) => {
+                if (
+                    e.target.closest('[data-menu-btn]') ||
+                    menuChat?._id === chat._id
+                ) {
+                    return;
+                }
+                onSelect(chat);
+            }}
+            {...longPressEvent}
             onContextMenu={(e) => e.preventDefault()} // Disable context menu
         >
             {/* Profile Picture or Group Icon */}
@@ -198,27 +177,6 @@ const ChatItem = ({ chat, sender, isSelected, onSelect, onThreeDotsClick, menuCh
                 )}
             </div>
 
-
-
-            {/* Three Dots Menu (All Devices) */}
-          <button data-menu-btn
-  
-      onPointerDown={(e) => {
-    e.preventDefault();
-    e.stopPropagation();
-  }}
-onClick={(e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    onThreeDotsClick(chat, e);
-  }}
-      className="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-full hover:bg-theme-bg-tertiary transition-all text-theme-text-secondary hover:text-theme-text-primary z-10"
-                aria-label="Chat options"
-            >
-                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
-                </svg>
-            </button>
 
             {/* Unread Count Badge 📬 */}
             {

@@ -11,6 +11,8 @@ import ThemeToggle from './ThemeToggle';
 import { getProfilePicUrl } from '../utils/authHelper';
 import { deleteChat } from '../redux/thunks/chatThunks';
 import ImageCropper from './ImageCropper';
+import { EllipsisVertical } from './animate-ui/icons/ellipsis-vertical';
+import { Plus } from './animate-ui/icons/plus';
 
 const Sidebar = ({ onChatSelect }) => {
     const dispatch = useDispatch();
@@ -151,29 +153,13 @@ const Sidebar = ({ onChatSelect }) => {
 
                     {/* Hamburger Menu Container */}
                     <div className="relative group">
-                        {/* Animated Hamburger/X Icon */}
+                        {/* Animated EllipsisVertical Icon */}
                         <button
                             onClick={toggleMenu}
                             className="p-2 text-theme-text-secondary hover:text-theme-text-primary focus:outline-none"
                             aria-label={isMenuOpen ? "Close menu" : "Open menu"}
                         >
-                            <div className="w-6 h-6 flex flex-col justify-center items-center">
-                                {/* Top line */}
-                                <span
-                                    className={`bg-current h-0.5 w-6 rounded transition-all duration-300 ease-in-out ${isMenuOpen ? 'rotate-45 translate-y-1.5' : ''
-                                        }`}
-                                />
-                                {/* Middle line */}
-                                <span
-                                    className={`bg-current h-0.5 w-6 rounded transition-all duration-300 ease-in-out my-1 ${isMenuOpen ? 'opacity-0' : ''
-                                        }`}
-                                />
-                                {/* Bottom line */}
-                                <span
-                                    className={`bg-current h-0.5 w-6 rounded transition-all duration-300 ease-in-out ${isMenuOpen ? '-rotate-45 -translate-y-1.5' : ''
-                                        }`}
-                                />
-                            </div>
+                            <EllipsisVertical animateOnHover={true} />
                         </button>
                     </div>
                 </div>
@@ -334,13 +320,11 @@ const Sidebar = ({ onChatSelect }) => {
             {/* Floating Action Button for New Group */}
             <button
                 onClick={() => setIsGroupModalOpen(true)}
-                className="absolute bottom-6 right-6 p-4 bg-theme-primary hover:bg-theme-primary-hover text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-110 z-20 group"
+                className="absolute bottom-6 right-6 p-3 bg-white hover:bg-gray-100 text-blue-600 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-110 z-20 group"
                 aria-label="Create New Group"
                 title="Create New Group"
             >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
-                </svg>
+                <Plus animateOnHover={true} className="w-6 h-6" />
                 {/* Tooltip for desktop */}
                 <span className="absolute right-full mr-2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none hidden md:block">
                     New Group
