@@ -38,21 +38,26 @@ const handleThreeDotsClick = (chat, event) => {
   event.preventDefault();
   event.stopPropagation();
 
-  const rect = event.currentTarget.getBoundingClientRect();
-  const newPosition = {
-    top: rect.bottom + window.scrollY,
-    left: rect.left - 100,
-  };
+    const button = event.currentTarget;
+  if (!button) return;
 
-  setMenuPosition(newPosition);
+  const rect = button.getBoundingClientRect();
 
-  setMenuChat((prev) => {
-    // same chat → toggle close
-    if (prev?._id === chat._id) return null;
+  const MENU_WIDTH = 160;
+  const PADDING = 8;
 
-    // different chat → open new menu
-    return chat;
-  });
+  const left = Math.min(
+    window.innerWidth - MENU_WIDTH - PADDING,
+    Math.max(PADDING, rect.left)
+  );
+
+  const top = rect.bottom + window.scrollY + 6;
+
+  setMenuPosition({ top, left });
+
+  setMenuChat((prev) => (
+    prev?._id === chat._id ? null : chat
+  ));
 };
 
     const handleDeleteChat = async (e) => {
@@ -63,7 +68,7 @@ const handleThreeDotsClick = (chat, event) => {
         }
     };
 
-   useEffect(() => {
+useEffect(() => {
   const handleClickOutside = (e) => {
     if (menuRef.current && !menuRef.current.contains(e.target)) {
       setMenuChat(null);
@@ -71,13 +76,14 @@ const handleThreeDotsClick = (chat, event) => {
   };
 
   if (menuChat) {
-    document.addEventListener('click', handleClickOutside);
+    document.addEventListener('pointerdown', handleClickOutside);
   }
 
   return () => {
-    document.removeEventListener('click', handleClickOutside);
+    document.removeEventListener('pointerdown', handleClickOutside);
   };
 }, [menuChat]);
+
 
     return (
         <div className="flex flex-col space-y-2 h-full overflow-y-auto p-2 scrollbar-hide">
@@ -85,15 +91,17 @@ const handleThreeDotsClick = (chat, event) => {
                 const sender = !chat.isGroupChat ? getSender(user, chat.users) : null;
 
                 return (
-                    <ChatItem
+                   <ChatItem
                         key={chat._id}
                         chat={chat}
-                        sender={sender}
+                         sender={sender}
                         isSelected={selectedChat?._id === chat._id}
                         onSelect={handleChatSelect}
                         onLongPress={handleLongPress}
                         onThreeDotsClick={handleThreeDotsClick}
-                    />
+                        menuChat={menuChat}
+                          />
+
                 );
             })}
 
@@ -122,7 +130,7 @@ const handleThreeDotsClick = (chat, event) => {
     );
 };
 
-const ChatItem = ({ chat, sender, isSelected, onSelect, onThreeDotsClick }) => {
+const ChatItem = ({ chat, sender, isSelected, onSelect, onThreeDotsClick, menuChat  }) => {
 
     return (
         <div
@@ -130,11 +138,15 @@ const ChatItem = ({ chat, sender, isSelected, onSelect, onThreeDotsClick }) => {
                 ? 'bg-theme-primary text-white'
                 : 'bg-theme-bg-secondary hover:bg-theme-bg-tertiary text-theme-text-primary'
                 }`}
-            onClick={(e) => {
-                // if click came from 3 dots, ignore
-                if (e.target.closest('[data-menu-btn]')) return;
-                onSelect(chat);
-            }}
+          onClick={(e) => {
+  if (
+    e.target.closest('[data-menu-btn]') ||
+    menuChat?._id === chat._id
+ ) {
+    return;
+  }
+  onSelect(chat);
+}}
 
             onContextMenu={(e) => e.preventDefault()} // Disable context menu
         >
