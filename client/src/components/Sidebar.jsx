@@ -177,16 +177,6 @@ const Sidebar = ({ onChatSelect }) => {
                             accept="image/*"
                         />
 
-                        {/* Custom Style for Hiding Scrollbar */}
-                        <style>{`
-                            .scrollbar-hide::-webkit-scrollbar {
-                                display: none;
-                            }
-                            .scrollbar-hide {
-                                -ms-overflow-style: none;
-                                scrollbar-width: none;
-                            }
-                        `}</style>
 
 
 
@@ -290,7 +280,7 @@ const Sidebar = ({ onChatSelect }) => {
 
             {/* Quick Access Users List (All Users with Status) */}
             <div className="px-4 py-2 border-b border-theme-border">
-                <div className="flex space-x-3 overflow-x-auto pb-2 scrollbar-hide">
+               <div className="flex space-x-3 overflow-x-scroll pb-2 scrollbar-hide touch-pan-x">
                     {allUsers.map((u) => {
                         const isOnline = onlineUsers.some(onlineUser => onlineUser._id === u._id);
                         return (
@@ -320,7 +310,7 @@ const Sidebar = ({ onChatSelect }) => {
             </div>
 
             {/* Chat List */}
-            <div className="flex-1 overflow-hidden">
+            <div className="flex-1">
                 {loading ? (
                     <div className="text-center text-theme-text-muted mt-5">Loading chats...</div>
                 ) : (
