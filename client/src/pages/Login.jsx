@@ -59,8 +59,8 @@ const Login = () => {
     };
 
     return (
-        <div className="auth-scroll h-screen bg-slate-900 text-slate-200">
-            <div className="min-h-full px-4 flex items-center justify-center">
+        <div className="auth-scroll h-[100dvh] bg-slate-900 text-slate-200">
+            <div className="min-h-full px-4 py-8 pb-32 flex items-center justify-center">
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-md">
                     <div className="bg-slate-800 p-8 rounded-2xl border border-slate-700 shadow-2xl">
 

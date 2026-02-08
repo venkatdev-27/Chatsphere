@@ -63,8 +63,8 @@ const Signup = () => {
     };
 
     return (
-        <div className="auth-scroll h-screen bg-slate-900 text-slate-200">
-            <div className="min-h-full px-4 py-8 flex flex-col items-center justify-center">
+        <div className="auth-scroll h-[100dvh] bg-slate-900 text-slate-200">
+            <div className="min-h-full px-4 py-8 pb-32 flex flex-col items-center justify-center">
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
