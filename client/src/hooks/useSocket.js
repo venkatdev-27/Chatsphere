@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { connectSocket, disconnectSocket, getSocket } from '../services/socket';
 import { useDispatch, useSelector } from 'react-redux';
-import { addMessage, handleMessageDeleted } from '../redux/slices/messageSlice';
+import { addMessage, handleMessageDeleted, updateUserInMessages } from '../redux/slices/messageSlice';
 import { addNotification, updateChatLatestMessage, setOnlineUsers, addUserOnline, removeUserOnline, updateUserInChats } from '../redux/slices/chatSlice';
 
 const useSocket = (user) => {
@@ -56,6 +56,7 @@ const useSocket = (user) => {
 
         socket.on('user_updated', (updatedUser) => {
             dispatch(updateUserInChats(updatedUser));
+            dispatch(updateUserInMessages(updatedUser));
         });
 
         socket.on('connect_error', (err) => {

@@ -35,6 +35,15 @@ const messageSlice = createSlice({
       } else {
       }
     },
+    updateUserInMessages: (state, action) => {
+        const updatedUser = action.payload;
+        state.messages = state.messages.map(msg => {
+            if (msg.sender._id === updatedUser._id) {
+                return { ...msg, sender: { ...msg.sender, ...updatedUser } };
+            }
+            return msg;
+        });
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -80,5 +89,5 @@ const messageSlice = createSlice({
   },
 });
 
-export const { addMessage, clearMessageError, handleMessageDeleted } = messageSlice.actions;
+export const { addMessage, clearMessageError, handleMessageDeleted, updateUserInMessages } = messageSlice.actions;
 export default messageSlice.reducer;
