@@ -52,7 +52,26 @@ module.exports = {
   				'3': 'hsl(var(--chart-3))',
   				'4': 'hsl(var(--chart-4))',
   				'5': 'hsl(var(--chart-5))'
-  			}
+  			},
+            theme: {
+                bg: {
+                    primary: 'var(--bg-primary)',
+                    secondary: 'var(--bg-secondary)',
+                    tertiary: 'var(--bg-tertiary)',
+                },
+                text: {
+                    primary: 'var(--text-primary)',
+                    secondary: 'var(--text-secondary)',
+                    muted: 'var(--text-muted)',
+                },
+                border: 'var(--border-color)',
+                primary: {
+                    DEFAULT: 'var(--primary-color)',
+                    hover: 'var(--primary-hover)',
+                },
+                success: 'var(--success-color)',
+                danger: 'var(--danger-color)',
+            }
   		}
   	}
   },
