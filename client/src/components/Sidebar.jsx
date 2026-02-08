@@ -259,7 +259,7 @@ const Sidebar = ({ onChatSelect }) => {
                     </button>
                 )}
                 {searchResults.length > 0 && (
-                    <div className="absolute top-12 left-3 right-3 bg-theme-bg-tertiary border border-theme-border rounded-lg shadow-lg z-10 max-h-60 overflow-y-auto custom-scrollbar">
+                    <div className="absolute top-12 left-3 right-3 bg-theme-bg-tertiary border border-theme-border rounded-lg shadow-lg z-10 max-h-60 overflow-y-auto scrollbar-hide">
                         {searchResults.map(u => (
                             <div
                                 key={u._id}
@@ -280,7 +280,7 @@ const Sidebar = ({ onChatSelect }) => {
 
             {/* Quick Access Users List (All Users with Status) */}
             <div className="px-4 py-2 border-b border-theme-border">
-               <div className="flex space-x-3 overflow-x-scroll pb-2 scrollbar-hide touch-pan-x">
+                <div className="flex space-x-3 overflow-x-scroll pb-2 scrollbar-hide touch-pan-x">
                     {allUsers.map((u) => {
                         const isOnline = onlineUsers.some(onlineUser => onlineUser._id === u._id);
                         return (
@@ -310,7 +310,7 @@ const Sidebar = ({ onChatSelect }) => {
             </div>
 
             {/* Chat List */}
-            <div className="flex-1">
+            <div className="flex-1 min-h-0 overflow-hidden">
                 {loading ? (
                     <div className="text-center text-theme-text-muted mt-5">Loading chats...</div>
                 ) : (

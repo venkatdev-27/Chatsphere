@@ -21,6 +21,7 @@ const ChatBox = ({ onBackClick }) => {
     const prevScrollHeightRef = useRef(null);
     const messagesEndRef = useRef(null);
     const fileInputRef = useRef(null);
+    const messageInputRef = useRef(null);
     const [updateModalOpen, setUpdateModalOpen] = useState(false);
 
     useEffect(() => {
@@ -132,6 +133,11 @@ const ChatBox = ({ onBackClick }) => {
                 setFile(null);
                 setPreviewUrl(null);
                 if (fileInputRef.current) fileInputRef.current.value = "";
+
+                // Keep keyobard open on mobile
+                setTimeout(() => {
+                    messageInputRef.current?.focus();
+                }, 10);
             }
         }
     };
@@ -290,10 +296,12 @@ const ChatBox = ({ onBackClick }) => {
                             placeholder="Type a message..."
                             value={newMessage}
                             onChange={(e) => setNewMessage(e.target.value)}
+                            ref={(input) => { messageInputRef.current = input; }}
                             className="flex-1 bg-theme-bg-secondary text-theme-text-primary rounded-full px-4 md:px-5 py-2 md:py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 mr-2 md:mr-3 text-sm md:text-base placeholder-theme-text-muted"
                         />
                         <button
                             type="submit"
+                            onMouseDown={(e) => e.preventDefault()} // Prevent button from stealing focus
                             className="bg-blue-600 hover:bg-blue-700 text-white rounded-full p-2 md:p-3 transition duration-200"
                         >
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5 md:w-6 md:h-6">

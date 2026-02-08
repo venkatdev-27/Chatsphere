@@ -80,7 +80,7 @@ const ChatList = ({ chats, onChatSelect }) => {
     }, [menuChat]);
 
     return (
-        <div className="flex flex-col space-y-2 h-full overflow-y-scroll p-2 scrollbar-hide">
+        <div className="flex flex-col space-y-2 h-full overflow-y-auto p-2 scrollbar-hide">
             {chats && chats.map((chat) => {
                 const sender = !chat.isGroupChat ? getSender(user, chat.users) : null;
 
