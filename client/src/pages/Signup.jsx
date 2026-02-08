@@ -69,162 +69,165 @@ const Signup = () => {
             starColor="#ffffff"
             speed={20}
             pointerEvents={false}
-            className="min-h-screen flex items-center justify-center p-4 bg-[radial-gradient(ellipse_at_bottom,_#27272a_0%,_#09090b_100%)]"
+            className="h-screen w-full flex items-center justify-center bg-[radial-gradient(ellipse_at_bottom,_#27272a_0%,_#09090b_100%)] overflow-hidden"
         >
             {/* Dark Overlay for Readability */}
             <div className="absolute inset-0 bg-zinc-950/40 backdrop-blur-[2px]" />
 
-            {/* Signup Card */}
-            <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
-                className="relative w-full max-w-md z-10"
-            >
-                <div className="bg-zinc-800/30 backdrop-blur-xl rounded-2xl border border-zinc-700/50 shadow-2xl p-8">
-                    {/* Header */}
-                    <div className="text-center mb-6">
-                        <h1 className="text-3xl font-bold text-zinc-100 mb-2">Create Account</h1>
-                        <p className="text-zinc-400 text-sm">Join us and start chatting</p>
-                    </div>
-
-                    {/* Error Message */}
-                    {(error || passwordError) && (
-                        <motion.div
-                            initial={{ opacity: 0, height: 0 }}
-                            animate={{ opacity: 1, height: 'auto' }}
-                            className="mb-5 px-4 py-3 rounded-lg bg-red-500/10 border border-red-500/50 text-red-400 text-sm"
-                        >
-                            {error || passwordError}
-                        </motion.div>
-                    )}
-
-                    {/* Form */}
-                    <form onSubmit={handleSubmit} className="space-y-4">
-                        {/* Name */}
-                        <div>
-                            <label className="block text-sm font-medium mb-1.5 text-zinc-300">Name</label>
-                            <input
-                                type="text"
-                                name="username"
-                                value={formData.username}
-                                onChange={handleChange}
-                                placeholder="Enter your name"
-                                className="w-full px-4 py-3 rounded-lg bg-zinc-900/60 border border-zinc-700/50 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition-all duration-200 text-zinc-100 placeholder-zinc-500"
-                            />
+            {/* Scrollable Content Container */}
+            <div className="relative w-full h-full overflow-y-auto flex items-center justify-center p-4">
+                {/* Signup Card */}
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6 }}
+                    className="relative w-full max-w-md z-10"
+                >
+                    <div className="bg-zinc-800/30 backdrop-blur-xl rounded-2xl border border-zinc-700/50 shadow-2xl p-8">
+                        {/* Header */}
+                        <div className="text-center mb-6">
+                            <h1 className="text-3xl font-bold text-zinc-100 mb-2">Create Account</h1>
+                            <p className="text-zinc-400 text-sm">Join us and start chatting</p>
                         </div>
 
-                        {/* Email */}
-                        <div>
-                            <label className="block text-sm font-medium mb-1.5 text-zinc-300">Email</label>
-                            <input
-                                type="email"
-                                name="email"
-                                value={formData.email}
-                                onChange={handleChange}
-                                placeholder="name@company.com"
-                                className="w-full px-4 py-3 rounded-lg bg-zinc-900/60 border border-zinc-700/50 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition-all duration-200 text-zinc-100 placeholder-zinc-500"
-                            />
-                        </div>
+                        {/* Error Message */}
+                        {(error || passwordError) && (
+                            <motion.div
+                                initial={{ opacity: 0, height: 0 }}
+                                animate={{ opacity: 1, height: 'auto' }}
+                                className="mb-5 px-4 py-3 rounded-lg bg-red-500/10 border border-red-500/50 text-red-400 text-sm"
+                            >
+                                {error || passwordError}
+                            </motion.div>
+                        )}
 
-                        {/* Mobile */}
-                        <div>
-                            <label className="block text-sm font-medium mb-1.5 text-zinc-300">Mobile Number</label>
-                            <input
-                                type="text"
-                                name="mobile"
-                                value={formData.mobile}
-                                onChange={handleChange}
-                                placeholder="+1 (555) 000-0000"
-                                className="w-full px-4 py-3 rounded-lg bg-zinc-900/60 border border-zinc-700/50 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition-all duration-200 text-zinc-100 placeholder-zinc-500"
-                            />
-                        </div>
-
-                        {/* Password */}
-                        <motion.div
-                            animate={shouldShakePass ? { x: [-10, 10, -10, 10, 0] } : {}}
-                            transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                        >
-                            <label className="block text-sm font-medium mb-1.5 text-zinc-300">Password</label>
-                            <div className="relative">
+                        {/* Form */}
+                        <form onSubmit={handleSubmit} className="space-y-4">
+                            {/* Name */}
+                            <div>
+                                <label className="block text-sm font-medium mb-1.5 text-zinc-300">Name</label>
                                 <input
-                                    type={showPassword ? 'text' : 'password'}
-                                    name="password"
-                                    value={formData.password}
+                                    type="text"
+                                    name="username"
+                                    value={formData.username}
                                     onChange={handleChange}
-                                    placeholder="Create a password"
-                                    className={`w-full px-4 py-3 pr-12 rounded-lg bg-zinc-900/60 border ${passwordError
-                                        ? 'border-red-500 ring-2 ring-red-500/30'
-                                        : 'border-zinc-700/50 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
-                                        } outline-none transition-all duration-200 text-zinc-100 placeholder-zinc-500`}
+                                    placeholder="Enter your name"
+                                    className="w-full px-4 py-3 rounded-lg bg-zinc-900/60 border border-zinc-700/50 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition-all duration-200 text-zinc-100 placeholder-zinc-500"
                                 />
-                                <button
-                                    type="button"
-                                    onClick={() => setShowPassword(!showPassword)}
-                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300 transition-colors p-1"
-                                >
-                                    <LockOpen animateOnHover={true} />
-                                </button>
                             </div>
-                        </motion.div>
 
-                        {/* Confirm Password */}
-                        <motion.div
-                            animate={shouldShakePass ? { x: [-10, 10, -10, 10, 0] } : {}}
-                            transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                        >
-                            <label className="block text-sm font-medium mb-1.5 text-zinc-300">Confirm Password</label>
-                            <div className="relative">
+                            {/* Email */}
+                            <div>
+                                <label className="block text-sm font-medium mb-1.5 text-zinc-300">Email</label>
                                 <input
-                                    type={showConfirmPassword ? 'text' : 'password'}
-                                    name="confirmPassword"
-                                    value={formData.confirmPassword}
+                                    type="email"
+                                    name="email"
+                                    value={formData.email}
                                     onChange={handleChange}
-                                    placeholder="Re-enter password"
-                                    className={`w-full px-4 py-3 pr-12 rounded-lg bg-zinc-900/60 border ${passwordError
-                                        ? 'border-red-500 ring-2 ring-red-500/30'
-                                        : 'border-zinc-700/50 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
-                                        } outline-none transition-all duration-200 text-zinc-100 placeholder-zinc-500`}
+                                    placeholder="name@company.com"
+                                    className="w-full px-4 py-3 rounded-lg bg-zinc-900/60 border border-zinc-700/50 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition-all duration-200 text-zinc-100 placeholder-zinc-500"
                                 />
-                                <button
-                                    type="button"
-                                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300 transition-colors p-1"
-                                >
-                                    <LockOpen animateOnHover={true} />
-                                </button>
                             </div>
-                        </motion.div>
 
-                        {/* Submit Button */}
-                        <button
-                            type="submit"
-                            disabled={loading}
-                            className="w-full py-3 mt-6 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-800 text-white font-semibold rounded-lg transition-all duration-200 shadow-lg shadow-blue-900/30 disabled:opacity-50 disabled:cursor-not-allowed"
-                        >
-                            {loading ? (
-                                <span className="flex items-center justify-center gap-2">
-                                    <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
-                                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                    </svg>
-                                    Creating account...
-                                </span>
-                            ) : "Create Account"}
-                        </button>
-                    </form>
+                            {/* Mobile */}
+                            <div>
+                                <label className="block text-sm font-medium mb-1.5 text-zinc-300">Mobile Number</label>
+                                <input
+                                    type="text"
+                                    name="mobile"
+                                    value={formData.mobile}
+                                    onChange={handleChange}
+                                    placeholder="+1 (555) 000-0000"
+                                    className="w-full px-4 py-3 rounded-lg bg-zinc-900/60 border border-zinc-700/50 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition-all duration-200 text-zinc-100 placeholder-zinc-500"
+                                />
+                            </div>
 
-                    {/* Footer */}
-                    <div className="mt-6 text-center">
-                        <p className="text-zinc-400 text-sm">
-                            Already have an account?{' '}
-                            <Link to="/login" className="text-blue-500 hover:text-blue-400 font-medium transition-colors">
-                                Sign in
-                            </Link>
-                        </p>
+                            {/* Password */}
+                            <motion.div
+                                animate={shouldShakePass ? { x: [-10, 10, -10, 10, 0] } : {}}
+                                transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                            >
+                                <label className="block text-sm font-medium mb-1.5 text-zinc-300">Password</label>
+                                <div className="relative">
+                                    <input
+                                        type={showPassword ? 'text' : 'password'}
+                                        name="password"
+                                        value={formData.password}
+                                        onChange={handleChange}
+                                        placeholder="Create a password"
+                                        className={`w-full px-4 py-3 pr-12 rounded-lg bg-zinc-900/60 border ${passwordError
+                                            ? 'border-red-500 ring-2 ring-red-500/30'
+                                            : 'border-zinc-700/50 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
+                                            } outline-none transition-all duration-200 text-zinc-100 placeholder-zinc-500`}
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowPassword(!showPassword)}
+                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300 transition-colors p-1"
+                                    >
+                                        <LockOpen animateOnHover={true} />
+                                    </button>
+                                </div>
+                            </motion.div>
+
+                            {/* Confirm Password */}
+                            <motion.div
+                                animate={shouldShakePass ? { x: [-10, 10, -10, 10, 0] } : {}}
+                                transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                            >
+                                <label className="block text-sm font-medium mb-1.5 text-zinc-300">Confirm Password</label>
+                                <div className="relative">
+                                    <input
+                                        type={showConfirmPassword ? 'text' : 'password'}
+                                        name="confirmPassword"
+                                        value={formData.confirmPassword}
+                                        onChange={handleChange}
+                                        placeholder="Re-enter password"
+                                        className={`w-full px-4 py-3 pr-12 rounded-lg bg-zinc-900/60 border ${passwordError
+                                            ? 'border-red-500 ring-2 ring-red-500/30'
+                                            : 'border-zinc-700/50 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
+                                            } outline-none transition-all duration-200 text-zinc-100 placeholder-zinc-500`}
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300 transition-colors p-1"
+                                    >
+                                        <LockOpen animateOnHover={true} />
+                                    </button>
+                                </div>
+                            </motion.div>
+
+                            {/* Submit Button */}
+                            <button
+                                type="submit"
+                                disabled={loading}
+                                className="w-full py-3 mt-6 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-800 text-white font-semibold rounded-lg transition-all duration-200 shadow-lg shadow-blue-900/30 disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                                {loading ? (
+                                    <span className="flex items-center justify-center gap-2">
+                                        <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                        </svg>
+                                        Creating account...
+                                    </span>
+                                ) : "Create Account"}
+                            </button>
+                        </form>
+
+                        {/* Footer */}
+                        <div className="mt-6 text-center">
+                            <p className="text-zinc-400 text-sm">
+                                Already have an account?{' '}
+                                <Link to="/login" className="text-blue-500 hover:text-blue-400 font-medium transition-colors">
+                                    Sign in
+                                </Link>
+                            </p>
+                        </div>
                     </div>
-                </div>
-            </motion.div>
+                </motion.div>
+            </div>
         </StarsBackground>
     );
 };
