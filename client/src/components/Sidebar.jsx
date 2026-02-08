@@ -285,7 +285,8 @@ const Sidebar = ({ onChatSelect }) => {
 
             {/* Quick Access Users List (All Users with Status) */}
             <div className="px-4 py-2 border-b border-theme-border">
-                <div className="flex space-x-3 overflow-x-auto pb-2 scrollbar-hide">
+             <div className=" flex space-x-3 overflow-x-auto pb-2  [scrollbar-width:none]  [-ms-overflow-style:none]  [&::-webkit-scrollbar]:hidden ">
+
                     {allUsers.map((u) => {
                         const isOnline = onlineUsers.some(onlineUser => onlineUser._id === u._id);
                         return (
@@ -306,7 +307,7 @@ const Sidebar = ({ onChatSelect }) => {
                                     {/* 3-Dots Menu Button */}
                                     <button
                                         onClick={(e) => toggleUserMenu(e, u._id)}
-                                        className="absolute -top-1 -right-1 p-0.5 bg-theme-bg-tertiary rounded-full shadow-md opacity-0 group-hover:opacity-100 transition-opacity hover:bg-theme-bg-secondary z-10"
+                                        className="absolute -top-1 -right-1 p-0.5 bg-theme-bg-tertiary rounded-full shadow-md opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity hover:bg-theme-bg-secondary z-10"
                                         title="Options"
                                     >
                                         <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-theme-text-secondary" viewBox="0 0 20 20" fill="currentColor">
