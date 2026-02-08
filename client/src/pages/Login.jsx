@@ -4,7 +4,7 @@ import { loginUser } from '../redux/thunks/authThunks';
 import { clearError } from '../redux/slices/authSlice';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { LockOpen } from '../components/animate-ui/icons/lock-open';
+import { LockOpen } from '@/components/animate-ui/icons/lock-open';
 
 const Login = () => {
     const [formData, setFormData] = useState({ mobile: '', password: '' });

@@ -11,8 +11,8 @@ import ThemeToggle from './ThemeToggle';
 import { getProfilePicUrl } from '../utils/authHelper';
 import { deleteChat } from '../redux/thunks/chatThunks';
 import ImageCropper from './ImageCropper';
-import { EllipsisVertical } from './animate-ui/icons/ellipsis-vertical';
-import { Plus } from './animate-ui/icons/plus';
+import { EllipsisVertical } from '@/components/animate-ui/icons/ellipsis-vertical';
+import { Plus } from '@/components/animate-ui/icons/plus';
 
 const Sidebar = ({ onChatSelect }) => {
     const dispatch = useDispatch();
