@@ -66,12 +66,13 @@ const Signup = () => {
 
     return (
         <StarsBackground
-            starColor="rgba(255, 255, 255, 0.3)"
-            speed={200}
-            className="min-h-screen flex items-center justify-center p-4 bg-[radial-gradient(ellipse_at_bottom,_#334155_0%,_#1e293b_50%,_#0f172a_100%)]"
+            starColor="#ffffff"
+            speed={20}
+            pointerEvents={false}
+            className="min-h-screen flex items-center justify-center p-4 bg-[radial-gradient(ellipse_at_bottom,_#27272a_0%,_#09090b_100%)]"
         >
             {/* Dark Overlay for Readability */}
-            <div className="absolute inset-0 bg-slate-950/40 backdrop-blur-[2px]" />
+            <div className="absolute inset-0 bg-zinc-950/40 backdrop-blur-[2px]" />
 
             {/* Signup Card */}
             <motion.div
@@ -80,11 +81,11 @@ const Signup = () => {
                 transition={{ duration: 0.6 }}
                 className="relative w-full max-w-md z-10"
             >
-                <div className="bg-slate-800/30 backdrop-blur-xl rounded-2xl border border-slate-700/50 shadow-2xl p-8">
+                <div className="bg-zinc-800/30 backdrop-blur-xl rounded-2xl border border-zinc-700/50 shadow-2xl p-8">
                     {/* Header */}
                     <div className="text-center mb-6">
-                        <h1 className="text-3xl font-bold text-slate-100 mb-2">Create Account</h1>
-                        <p className="text-slate-400 text-sm">Join us and start chatting</p>
+                        <h1 className="text-3xl font-bold text-zinc-100 mb-2">Create Account</h1>
+                        <p className="text-zinc-400 text-sm">Join us and start chatting</p>
                     </div>
 
                     {/* Error Message */}
@@ -102,40 +103,40 @@ const Signup = () => {
                     <form onSubmit={handleSubmit} className="space-y-4">
                         {/* Name */}
                         <div>
-                            <label className="block text-sm font-medium mb-1.5 text-slate-300">Name</label>
+                            <label className="block text-sm font-medium mb-1.5 text-zinc-300">Name</label>
                             <input
                                 type="text"
                                 name="username"
                                 value={formData.username}
                                 onChange={handleChange}
                                 placeholder="Enter your name"
-                                className="w-full px-4 py-3 rounded-lg bg-slate-900/60 border border-slate-700/50 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition-all duration-200 text-slate-100 placeholder-slate-500"
+                                className="w-full px-4 py-3 rounded-lg bg-zinc-900/60 border border-zinc-700/50 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition-all duration-200 text-zinc-100 placeholder-zinc-500"
                             />
                         </div>
 
                         {/* Email */}
                         <div>
-                            <label className="block text-sm font-medium mb-1.5 text-slate-300">Email</label>
+                            <label className="block text-sm font-medium mb-1.5 text-zinc-300">Email</label>
                             <input
                                 type="email"
                                 name="email"
                                 value={formData.email}
                                 onChange={handleChange}
                                 placeholder="name@company.com"
-                                className="w-full px-4 py-3 rounded-lg bg-slate-900/60 border border-slate-700/50 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition-all duration-200 text-slate-100 placeholder-slate-500"
+                                className="w-full px-4 py-3 rounded-lg bg-zinc-900/60 border border-zinc-700/50 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition-all duration-200 text-zinc-100 placeholder-zinc-500"
                             />
                         </div>
 
                         {/* Mobile */}
                         <div>
-                            <label className="block text-sm font-medium mb-1.5 text-slate-300">Mobile Number</label>
+                            <label className="block text-sm font-medium mb-1.5 text-zinc-300">Mobile Number</label>
                             <input
                                 type="text"
                                 name="mobile"
                                 value={formData.mobile}
                                 onChange={handleChange}
                                 placeholder="+1 (555) 000-0000"
-                                className="w-full px-4 py-3 rounded-lg bg-slate-900/60 border border-slate-700/50 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition-all duration-200 text-slate-100 placeholder-slate-500"
+                                className="w-full px-4 py-3 rounded-lg bg-zinc-900/60 border border-zinc-700/50 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition-all duration-200 text-zinc-100 placeholder-zinc-500"
                             />
                         </div>
 
@@ -144,7 +145,7 @@ const Signup = () => {
                             animate={shouldShakePass ? { x: [-10, 10, -10, 10, 0] } : {}}
                             transition={{ type: "spring", stiffness: 300, damping: 20 }}
                         >
-                            <label className="block text-sm font-medium mb-1.5 text-slate-300">Password</label>
+                            <label className="block text-sm font-medium mb-1.5 text-zinc-300">Password</label>
                             <div className="relative">
                                 <input
                                     type={showPassword ? 'text' : 'password'}
@@ -152,15 +153,15 @@ const Signup = () => {
                                     value={formData.password}
                                     onChange={handleChange}
                                     placeholder="Create a password"
-                                    className={`w-full px-4 py-3 pr-12 rounded-lg bg-slate-900/60 border ${passwordError
+                                    className={`w-full px-4 py-3 pr-12 rounded-lg bg-zinc-900/60 border ${passwordError
                                         ? 'border-red-500 ring-2 ring-red-500/30'
-                                        : 'border-slate-700/50 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
-                                        } outline-none transition-all duration-200 text-slate-100 placeholder-slate-500`}
+                                        : 'border-zinc-700/50 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
+                                        } outline-none transition-all duration-200 text-zinc-100 placeholder-zinc-500`}
                                 />
                                 <button
                                     type="button"
                                     onClick={() => setShowPassword(!showPassword)}
-                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 transition-colors p-1"
+                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300 transition-colors p-1"
                                 >
                                     <LockOpen animateOnHover={true} />
                                 </button>
@@ -172,7 +173,7 @@ const Signup = () => {
                             animate={shouldShakePass ? { x: [-10, 10, -10, 10, 0] } : {}}
                             transition={{ type: "spring", stiffness: 300, damping: 20 }}
                         >
-                            <label className="block text-sm font-medium mb-1.5 text-slate-300">Confirm Password</label>
+                            <label className="block text-sm font-medium mb-1.5 text-zinc-300">Confirm Password</label>
                             <div className="relative">
                                 <input
                                     type={showConfirmPassword ? 'text' : 'password'}
@@ -180,15 +181,15 @@ const Signup = () => {
                                     value={formData.confirmPassword}
                                     onChange={handleChange}
                                     placeholder="Re-enter password"
-                                    className={`w-full px-4 py-3 pr-12 rounded-lg bg-slate-900/60 border ${passwordError
+                                    className={`w-full px-4 py-3 pr-12 rounded-lg bg-zinc-900/60 border ${passwordError
                                         ? 'border-red-500 ring-2 ring-red-500/30'
-                                        : 'border-slate-700/50 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
-                                        } outline-none transition-all duration-200 text-slate-100 placeholder-slate-500`}
+                                        : 'border-zinc-700/50 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
+                                        } outline-none transition-all duration-200 text-zinc-100 placeholder-zinc-500`}
                                 />
                                 <button
                                     type="button"
                                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 transition-colors p-1"
+                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300 transition-colors p-1"
                                 >
                                     <LockOpen animateOnHover={true} />
                                 </button>
@@ -215,7 +216,7 @@ const Signup = () => {
 
                     {/* Footer */}
                     <div className="mt-6 text-center">
-                        <p className="text-slate-400 text-sm">
+                        <p className="text-zinc-400 text-sm">
                             Already have an account?{' '}
                             <Link to="/login" className="text-blue-500 hover:text-blue-400 font-medium transition-colors">
                                 Sign in

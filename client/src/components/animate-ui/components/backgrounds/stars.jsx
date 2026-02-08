@@ -1,4 +1,3 @@
-'use client';;
 import * as React from 'react';
 import { motion, useMotionValue, useSpring } from 'motion/react';
 
@@ -59,7 +58,7 @@ function StarsBackground({
   factor = 0.05,
   speed = 50,
   transition = { stiffness: 50, damping: 20 },
-  starColor = '#fff',
+  starColor = '#f0ececff',
   pointerEvents = true,
   ...props
 }) {
@@ -85,10 +84,10 @@ function StarsBackground({
         'relative size-full overflow-hidden bg-[radial-gradient(ellipse_at_bottom,_#262626_0%,_#000_100%)]',
         className
       )}
-      onMouseMove={handleMouseMove}
+      onMouseMove={pointerEvents ? handleMouseMove : undefined}
       {...props}>
       <motion.div
-        style={{ x: springX, y: springY }}
+        style={{ x: springX, y: springY, filter: 'drop-shadow(0 0 1px white)' }}
         className={cn({ 'pointer-events-none': !pointerEvents })}>
         <StarLayer
           count={1000}
