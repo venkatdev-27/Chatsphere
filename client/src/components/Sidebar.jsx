@@ -115,15 +115,15 @@ const Sidebar = ({ onChatSelect }) => {
 
     // Close menus when clicking outside
     useEffect(() => {
-  const handleClickOutside = (e) => {
-    if (!e.target.closest('.user-menu')) {
-      setActiveUserMenu(null);
-    }
-  };
+        const handleClickOutside = (e) => {
+            if (!e.target.closest('.user-menu')) {
+                setActiveUserMenu(null);
+            }
+        };
 
-  document.addEventListener('mousedown', handleClickOutside);
-  return () => document.removeEventListener('mousedown', handleClickOutside);
-}, []);
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
 
     return (
         <div className="w-full h-full bg-theme-bg-secondary border-r border-theme-border flex flex-col relative">
@@ -290,73 +290,31 @@ const Sidebar = ({ onChatSelect }) => {
 
             {/* Quick Access Users List (All Users with Status) */}
             <div className="px-4 py-2 border-b border-theme-border">
-                <div className="flex flex-col gap-2 pb-2 scrollbar-hide h-full overflow-y-auto">
+                <div className="flex space-x-3 overflow-x-auto pb-2 scrollbar-hide">
                     {allUsers.map((u) => {
                         const isOnline = onlineUsers.some(onlineUser => onlineUser._id === u._id);
                         return (
                             <div
                                 key={u._id}
-                                
-                                onContextMenu={(e) => e.preventDefault()} 
- className="flex items-center justify-between p-3 cursor-pointer hover:bg-theme-bg-secondary transition-colors relative group select-none border-b border-theme-border/50"  >
-                                <div
                                 onClick={() => dispatch(accessChat(u._id))}
-
-                                 className="flex items-center gap-3">
-                                    <div className="relative">
-                                        <img
-                                            src={getProfilePicUrl(u.pic)}
-                                            alt={u.username}
-                                            className={`w-12 h-12 rounded-full border-2 object-cover ${isOnline ? 'border-green-500' : 'border-theme-border'}`}
-                                        />
-                                        <div className={`absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-theme-bg-secondary ${isOnline ? 'bg-success-color' : 'bg-gray-400'}`}></div>
-                                    </div>
-
-                                    <div className="flex flex-col">
-                                        <span className="text-theme-text-primary font-medium text-base">
-                                            {u.username}
-                                        </span>
-                                        <span className="text-xs text-theme-text-secondary truncate w-32">
-                                            {isOnline ? 'Online' : 'Offline'}
-                                        </span>
-                                    </div>
-                                </div>
-
-                                {/* 3-Dots Menu Button - Right Aligned */}
+                                className="flex flex-col items-center min-w-[60px] cursor-pointer group relative p-1 rounded-lg hover:bg-theme-bg-secondary transition-colors"
+                            >
                                 <div className="relative">
-                                    <button
-                                        onClick={(e) => toggleUserMenu(e, u._id)}
-                                        className="p-2 text-theme-text-secondary hover:text-theme-text-primary rounded-full hover:bg-theme-bg-tertiary "
-                                        title="Options"
-                                    >
-                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                            <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
-                                        </svg>
-                                    </button>
-
-                                    {/* Dropdown Menu - Positioned Relative to Button */}
-                                    {activeUserMenu === u._id && (
-                                        <div
-                                            className="absolute right-0 top-full mt-1 bg-theme-bg-tertiary border border-theme-border rounded-lg shadow-xl z-50 w-40 overflow-hidden"
-                                            onClick={(e) => e.stopPropagation()}
-                                        >
-                                            <button
-                                                onClick={(e) => handleDeleteChat(e, u._id)}
-                                                className="w-full text-left px-4 py-3 text-sm text-red-500 hover:bg-theme-bg-secondary flex items-center gap-3 transition-colors"
-                                            >
-                                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                                </svg>
-                                                Delete Chat
-                                            </button>
-                                        </div>
-                                    )}
+                                    <img
+                                        src={getProfilePicUrl(u.pic)}
+                                        alt={u.username}
+                                        className={`w-12 h-12 rounded-full border-2 object-cover group-hover:scale-105 transition-transform ${isOnline ? 'border-green-500' : 'border-theme-border'}`}
+                                    />
+                                    <div className={`absolute bottom-0 right-0 w-3.5 h-3.5 rounded-full border-2 border-theme-bg-secondary ${isOnline ? 'bg-success-color' : 'bg-gray-400'}`}></div>
                                 </div>
+                                <span className={`text-xs mt-1 truncate w-14 text-center transition-colors ${isOnline ? 'text-theme-text-primary font-medium' : 'text-theme-text-secondary group-hover:text-theme-text-primary'}`}>
+                                    {u.username.split(' ')[0]}
+                                </span>
                             </div>
                         );
                     })}
                     {allUsers.length === 0 && (
-                        <div className="p-4 text-center text-theme-text-muted italic">No contacts found</div>
+                        <span className="text-xs text-theme-text-muted italic">No contacts yet</span>
                     )}
                 </div>
             </div>
