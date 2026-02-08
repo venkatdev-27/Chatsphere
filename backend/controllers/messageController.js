@@ -30,8 +30,7 @@ const sendMessage = async (req, res) => {
   };
 
   if (req.file) {
-    const filePath = req.file.path.replace(/\\/g, "/");
-    newMessage.file = filePath;
+    newMessage.file = req.file.path;
     
     const mime = req.file.mimetype;
     if (mime.startsWith('image/')) {
