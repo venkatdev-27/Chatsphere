@@ -5,6 +5,7 @@ import {
   checkAuth,
   updateProfile,
   searchUsers,
+  fetchAllUsers,
 } from '../thunks/authThunks';
 
 /**
@@ -40,6 +41,8 @@ const initialState = {
   isAuthenticated: false,
   searchResults: [],
   isSearchLoading: false,
+  allUsers: [], // All registered users
+  isAllUsersLoading: false,
 };
 
 const authSlice = createSlice({
@@ -130,6 +133,19 @@ const authSlice = createSlice({
       })
       .addCase(searchUsers.rejected, (state, action) => {
         state.isSearchLoading = false;
+        state.error = normalizeError(action.payload);
+      })
+
+      // ---------------- FETCH ALL USERS ----------------
+      .addCase(fetchAllUsers.pending, (state) => {
+        state.isAllUsersLoading = true;
+      })
+      .addCase(fetchAllUsers.fulfilled, (state, action) => {
+        state.isAllUsersLoading = false;
+        state.allUsers = action.payload;
+      })
+      .addCase(fetchAllUsers.rejected, (state, action) => {
+        state.isAllUsersLoading = false;
         state.error = normalizeError(action.payload);
       });
   },

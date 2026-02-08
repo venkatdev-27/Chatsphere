@@ -93,3 +93,16 @@ export const searchUsers = createAsyncThunk(
     }
   }
 );
+
+// ---------------- FETCH ALL USERS ----------------
+export const fetchAllUsers = createAsyncThunk(
+  'auth/fetchAllUsers',
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.get('/auth');
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(getErrorPayload(error));
+    }
+  }
+);

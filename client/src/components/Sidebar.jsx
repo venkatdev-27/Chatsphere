@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { fetchChats, accessChat } from '../redux/thunks/chatThunks';
 import ChatList from './ChatList';
 import { logout, clearSearchResults } from '../redux/slices/authSlice';
-import { updateProfile, searchUsers } from '../redux/thunks/authThunks';
+import { updateProfile, searchUsers, fetchAllUsers } from '../redux/thunks/authThunks';
 import { disconnectSocket } from '../services/socket';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -15,30 +15,14 @@ const Sidebar = ({ onChatSelect }) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { chats, loading, onlineUsers } = useSelector((state) => state.chat);
-    const { user, searchResults } = useSelector((state) => state.auth);
+    const { user, searchResults, allUsers } = useSelector((state) => state.auth);
 
     const fileInputRef = useRef(null);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isGroupModalOpen, setIsGroupModalOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
 
-    const allUsers = useMemo(() => {
-        if (!chats) return [];
-        const uniqueUsersMap = new Map();
-        chats.forEach(chat => {
-            if (!chat.isGroupChat) {
-                const otherUser = chat.users.find(u => u._id !== user._id);
-                if (otherUser) uniqueUsersMap.set(otherUser._id, otherUser);
-            } else {
-                chat.users.forEach(u => {
-                    if (u._id !== user._id) {
-                        uniqueUsersMap.set(u._id, u);
-                    }
-                });
-            }
-        });
-        return Array.from(uniqueUsersMap.values());
-    }, [chats, user]);
+
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
@@ -47,6 +31,7 @@ const Sidebar = ({ onChatSelect }) => {
     useEffect(() => {
         if (user) {
             dispatch(fetchChats());
+            dispatch(fetchAllUsers());
         }
     }, [dispatch, user]);
 
