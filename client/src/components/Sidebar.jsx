@@ -11,6 +11,7 @@ import GroupChatModal from './GroupChatModal';
 import ThemeToggle from './ThemeToggle';
 import { getProfilePicUrl } from '../utils/authHelper';
 import { deleteChat } from '../redux/thunks/chatThunks';
+import ImageCropper from './ImageCropper';
 
 const Sidebar = ({ onChatSelect }) => {
     const dispatch = useDispatch();
@@ -23,6 +24,7 @@ const Sidebar = ({ onChatSelect }) => {
     const [isGroupModalOpen, setIsGroupModalOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
     const [activeUserMenu, setActiveUserMenu] = useState(null); // Store userId for open menu
+    const [imageToCrop, setImageToCrop] = useState(null);
 
 
 
@@ -47,21 +49,35 @@ const Sidebar = ({ onChatSelect }) => {
         fileInputRef.current.click();
     };
 
-    const handleFileChange = async (e) => {
+    const handleFileChange = (e) => {
         const file = e.target.files[0];
         if (file) {
+            const reader = new FileReader();
+            reader.onload = () => {
+                setImageToCrop(reader.result);
+            };
+            reader.readAsDataURL(file);
+            e.target.value = ''; // Reset input so same file can be selected again
+        }
+    };
+
+    const handleCropComplete = async (croppedBlob) => {
+        if (croppedBlob) {
             const formData = new FormData();
-            formData.append('pic', file);
+            formData.append('pic', croppedBlob, 'profile.jpg');
 
             try {
                 await dispatch(updateProfile(formData)).unwrap();
                 toast.success('Profile picture updated! 🎉');
-                e.target.value = '';
+                setImageToCrop(null);
             } catch (error) {
                 toast.error(error || 'Failed to update profile picture');
-                e.target.value = '';
             }
         }
+    };
+
+    const handleCropCancel = () => {
+        setImageToCrop(null);
     };
 
     const handleSearch = (e) => {
@@ -335,6 +351,14 @@ const Sidebar = ({ onChatSelect }) => {
             </button>
 
             <GroupChatModal isOpen={isGroupModalOpen} onClose={() => setIsGroupModalOpen(false)} />
+
+            {imageToCrop && (
+                <ImageCropper
+                    imageSrc={imageToCrop}
+                    onCropComplete={handleCropComplete}
+                    onClose={handleCropCancel}
+                />
+            )}
         </div>
     );
 };
