@@ -109,7 +109,7 @@ const ChatList = ({ chats, onChatSelect }) => {
 };
 
 const ChatItem = ({ chat, sender, isSelected, onSelect, onLongPress, menuChat }) => {
-    const longPressEvent = useLongPress((e) => onLongPress(chat, e), 3000);
+    const longPressEvent = useLongPress((e) => onLongPress(chat, e), 2000);
 
     return (
         <div

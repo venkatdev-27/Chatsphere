@@ -62,9 +62,9 @@ const Login = () => {
 
     return (
         <StarsBackground
-            starColor="#6B7280"
+            starColor="rgba(255, 255, 255, 0.3)"
             speed={200}
-            className="min-h-screen flex items-center justify-center p-4 bg-[radial-gradient(ellipse_at_bottom,_#1e293b_0%,_#0f172a_100%)]"
+            className="min-h-screen flex items-center justify-center p-4 bg-[radial-gradient(ellipse_at_bottom,_#334155_0%,_#1e293b_50%,_#0f172a_100%)]"
         >
             {/* Dark Overlay for Readability */}
             <div className="absolute inset-0 bg-slate-950/40 backdrop-blur-[2px]" />

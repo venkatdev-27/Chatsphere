@@ -66,9 +66,9 @@ const Signup = () => {
 
     return (
         <StarsBackground
-            starColor="#6B7280"
+            starColor="rgba(255, 255, 255, 0.3)"
             speed={200}
-            className="min-h-screen flex items-center justify-center p-4 bg-[radial-gradient(ellipse_at_bottom,_#1e293b_0%,_#0f172a_100%)]"
+            className="min-h-screen flex items-center justify-center p-4 bg-[radial-gradient(ellipse_at_bottom,_#334155_0%,_#1e293b_50%,_#0f172a_100%)]"
         >
             {/* Dark Overlay for Readability */}
             <div className="absolute inset-0 bg-slate-950/40 backdrop-blur-[2px]" />
@@ -153,8 +153,8 @@ const Signup = () => {
                                     onChange={handleChange}
                                     placeholder="Create a password"
                                     className={`w-full px-4 py-3 pr-12 rounded-lg bg-slate-900/60 border ${passwordError
-                                            ? 'border-red-500 ring-2 ring-red-500/30'
-                                            : 'border-slate-700/50 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
+                                        ? 'border-red-500 ring-2 ring-red-500/30'
+                                        : 'border-slate-700/50 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
                                         } outline-none transition-all duration-200 text-slate-100 placeholder-slate-500`}
                                 />
                                 <button
@@ -181,8 +181,8 @@ const Signup = () => {
                                     onChange={handleChange}
                                     placeholder="Re-enter password"
                                     className={`w-full px-4 py-3 pr-12 rounded-lg bg-slate-900/60 border ${passwordError
-                                            ? 'border-red-500 ring-2 ring-red-500/30'
-                                            : 'border-slate-700/50 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
+                                        ? 'border-red-500 ring-2 ring-red-500/30'
+                                        : 'border-slate-700/50 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
                                         } outline-none transition-all duration-200 text-slate-100 placeholder-slate-500`}
                                 />
                                 <button
