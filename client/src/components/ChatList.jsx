@@ -99,8 +99,8 @@ const ChatList = ({ chats, onChatSelect }) => {
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                        <AlertDialogCancel onClick={() => setMenuChat(null)}>Cancel</AlertDialogCancel>
-                        <AlertDialogAction onClick={handleDeleteChat} className="bg-red-600 hover:bg-red-700">Delete</AlertDialogAction>
+                        <AlertDialogCancel onClick={() => setMenuChat(null)} className="bg-slate-700 text-slate-100 hover:bg-slate-600 border-slate-600">Cancel</AlertDialogCancel>
+                        <AlertDialogAction onClick={handleDeleteChat} className="bg-red-700 hover:bg-red-800 text-white">Delete</AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>
@@ -109,7 +109,7 @@ const ChatList = ({ chats, onChatSelect }) => {
 };
 
 const ChatItem = ({ chat, sender, isSelected, onSelect, onLongPress, menuChat }) => {
-    const longPressEvent = useLongPress((e) => onLongPress(chat, e), { delay: 3000 });
+    const longPressEvent = useLongPress((e) => onLongPress(chat, e), 3000);
 
     return (
         <div
