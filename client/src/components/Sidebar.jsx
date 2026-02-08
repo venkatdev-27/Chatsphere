@@ -10,6 +10,7 @@ import { toast } from 'react-toastify';
 import GroupChatModal from './GroupChatModal';
 import ThemeToggle from './ThemeToggle';
 import { getProfilePicUrl } from '../utils/authHelper';
+import { deleteChat } from '../redux/thunks/chatThunks';
 
 const Sidebar = ({ onChatSelect }) => {
     const dispatch = useDispatch();
@@ -21,6 +22,7 @@ const Sidebar = ({ onChatSelect }) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isGroupModalOpen, setIsGroupModalOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
+    const [activeUserMenu, setActiveUserMenu] = useState(null); // Store userId for open menu
 
 
 
@@ -83,6 +85,41 @@ const Sidebar = ({ onChatSelect }) => {
         dispatch(clearSearchResults());
     };
 
+    const handleDeleteChat = async (e, userId) => {
+        e.stopPropagation(); // Prevent selecting the chat
+        setActiveUserMenu(null); // Close menu
+
+        // Find the chat associated with this user
+        const chatToDelete = chats.find(c => !c.isGroupChat && c.users.some(u => u._id === userId));
+
+        if (chatToDelete) {
+            try {
+                await dispatch(deleteChat(chatToDelete._id)).unwrap();
+                toast.success('Chat deleted successfully');
+            } catch (error) {
+                toast.error('Failed to delete chat');
+            }
+        } else {
+            toast.info('No chat history to delete');
+        }
+    };
+
+    const toggleUserMenu = (e, userId) => {
+        e.stopPropagation();
+        if (activeUserMenu === userId) {
+            setActiveUserMenu(null);
+        } else {
+            setActiveUserMenu(userId);
+        }
+    };
+
+    // Close menus when clicking outside
+    useEffect(() => {
+        const handleClickOutside = () => setActiveUserMenu(null);
+        document.addEventListener('click', handleClickOutside);
+        return () => document.removeEventListener('click', handleClickOutside);
+    }, []);
+
     return (
         <div className="w-full h-full bg-theme-bg-secondary border-r border-theme-border flex flex-col relative">
             {/* Header */}
@@ -134,6 +171,17 @@ const Sidebar = ({ onChatSelect }) => {
                             onChange={handleFileChange}
                             accept="image/*"
                         />
+
+                        {/* Custom Style for Hiding Scrollbar */}
+                        <style>{`
+                            .scrollbar-hide::-webkit-scrollbar {
+                                display: none;
+                            }
+                            .scrollbar-hide {
+                                -ms-overflow-style: none;
+                                scrollbar-width: none;
+                            }
+                        `}</style>
 
 
 
@@ -237,26 +285,54 @@ const Sidebar = ({ onChatSelect }) => {
 
             {/* Quick Access Users List (All Users with Status) */}
             <div className="px-4 py-2 border-b border-theme-border">
-                <div className="flex space-x-3 overflow-x-auto pb-2 custom-scrollbar">
+                <div className="flex space-x-3 overflow-x-auto pb-2 scrollbar-hide">
                     {allUsers.map((u) => {
                         const isOnline = onlineUsers.some(onlineUser => onlineUser._id === u._id);
                         return (
                             <div
                                 key={u._id}
                                 onClick={() => dispatch(accessChat(u._id))}
-                                className="flex flex-col items-center min-w-[50px] cursor-pointer group"
+                                onContextMenu={(e) => e.preventDefault()} // Disable right-click / long-press
+                                className="flex flex-col items-center min-w-[60px] cursor-pointer group relative p-1 rounded-lg hover:bg-theme-bg-secondary transition-colors select-none"
                             >
                                 <div className="relative">
                                     <img
                                         src={getProfilePicUrl(u.pic)}
                                         alt={u.username}
-                                        className={`w-10 h-10 rounded-full border-2 object-cover group-hover:scale-105 transition-transform ${isOnline ? 'border-green-500' : 'border-gray-500'}`}
+                                        className={`w-12 h-12 rounded-full border-2 object-cover group-hover:scale-105 transition-transform ${isOnline ? 'border-green-500' : 'border-gray-500'}`}
                                     />
-                                    <div className={`absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-theme-bg-secondary ${isOnline ? 'bg-success-color' : 'bg-gray-400'}`}></div>
+                                    <div className={`absolute bottom-0 right-0 w-3.5 h-3.5 rounded-full border-2 border-theme-bg-secondary ${isOnline ? 'bg-success-color' : 'bg-gray-400'}`}></div>
+
+                                    {/* 3-Dots Menu Button */}
+                                    <button
+                                        onClick={(e) => toggleUserMenu(e, u._id)}
+                                        className="absolute -top-1 -right-1 p-0.5 bg-theme-bg-tertiary rounded-full shadow-md opacity-0 group-hover:opacity-100 transition-opacity hover:bg-theme-bg-secondary z-10"
+                                        title="Options"
+                                    >
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-theme-text-secondary" viewBox="0 0 20 20" fill="currentColor">
+                                            <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
+                                        </svg>
+                                    </button>
                                 </div>
-                                <span className={`text-xs mt-1 truncate w-12 text-center transition-colors ${isOnline ? 'text-theme-text-primary font-medium' : 'text-theme-text-secondary group-hover:text-theme-text-primary'}`}>
+
+                                <span className={`text-xs mt-1 truncate w-14 text-center transition-colors ${isOnline ? 'text-theme-text-primary font-medium' : 'text-theme-text-secondary group-hover:text-theme-text-primary'}`}>
                                     {u.username.split(' ')[0]}
                                 </span>
+
+                                {/* Dropdown Menu */}
+                                {activeUserMenu === u._id && (
+                                    <div className="absolute top-8 left-1/2 transform -translate-x-1/2 bg-theme-bg-tertiary border border-theme-border rounded shadow-lg z-20 w-32 py-1">
+                                        <button
+                                            onClick={(e) => handleDeleteChat(e, u._id)}
+                                            className="w-full text-left px-3 py-1.5 text-xs text-red-500 hover:bg-theme-bg-secondary flex items-center gap-2"
+                                        >
+                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                            </svg>
+                                            Delete Chat
+                                        </button>
+                                    </div>
+                                )}
                             </div>
                         );
                     })}
