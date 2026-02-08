@@ -324,7 +324,7 @@ const Sidebar = ({ onChatSelect }) => {
                 aria-label="Create New Group"
                 title="Create New Group"
             >
-                <Plus animateOnHover={true} className="w-6 h-6" />
+                <Plus animateOnHover={true} className="w-6 h-6 text-sky-500" />
                 {/* Tooltip for desktop */}
                 <span className="absolute right-full mr-2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none hidden md:block">
                     New Group
