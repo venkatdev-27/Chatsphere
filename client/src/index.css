@@ -94,3 +94,8 @@ body,
   display: none;
   /* Chrome, Safari, Android */
 }
+/* Allow scroll ONLY inside auth pages */
+.auth-scroll {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}

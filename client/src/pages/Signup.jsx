@@ -63,7 +63,16 @@ const Signup = () => {
     };
 
     return (
-<div className=" min-h-screen overflow-y-auto px-4 py-8 bg-slate-900 text-slate-200  flex flex-col items-center justify-center md:overflow-hidden">
+<div className="auth-scroll
+  min-h-screen
+  px-4 py-8
+  bg-slate-900 text-slate-200
+  flex flex-col
+  items-center
+  justify-start
+  md:justify-center
+  md:overflow-hidden
+">
 
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
