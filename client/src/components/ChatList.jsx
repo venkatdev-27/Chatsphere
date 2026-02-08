@@ -35,6 +35,7 @@ const ChatList = ({ chats, onChatSelect }) => {
     };
 
     const handleThreeDotsClick = (chat, event) => {
+        event.preventDefault();
         event.stopPropagation();
 
         // Calculate position first to ensure it's ready if we are opening
@@ -185,8 +186,12 @@ const ChatItem = ({ chat, sender, isSelected, onSelect, onThreeDotsClick }) => {
 
             {/* Three Dots Menu (All Devices) */}
             <button
-                onMouseDown={(e) => e.stopPropagation()}
-                onClick={(e) => onThreeDotsClick(chat, e)}
+                onMouseDown={(e) => { e.stopPropagation(); }}
+                onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    onThreeDotsClick(chat, e);
+                }}
                 className="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-full hover:bg-theme-bg-tertiary transition-all text-theme-text-secondary hover:text-theme-text-primary z-10"
                 aria-label="Chat options"
             >
