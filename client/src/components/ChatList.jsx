@@ -34,23 +34,26 @@ const ChatList = ({ chats, onChatSelect }) => {
         setMenuChat(chat);
     };
 
-    const handleThreeDotsClick = (chat, event) => {
-        event.preventDefault();
-        event.stopPropagation();
+const handleThreeDotsClick = (chat, event) => {
+  event.preventDefault();
+  event.stopPropagation();
 
-        // Calculate position first to ensure it's ready if we are opening
-        const rect = event.currentTarget.getBoundingClientRect();
-        const newPosition = { top: rect.bottom + window.scrollY, left: rect.left - 100 };
+  const rect = event.currentTarget.getBoundingClientRect();
+  const newPosition = {
+    top: rect.bottom + window.scrollY,
+    left: rect.left - 100,
+  };
 
-        setMenuChat(prev => {
-            if (prev && prev._id === chat._id) {
-                return null; // Close if already open
-            }
-            // Open new chat menu
-            setMenuPosition(newPosition);
-            return chat;
-        });
-    };
+  setMenuPosition(newPosition);
+
+  setMenuChat((prev) => {
+    // same chat → toggle close
+    if (prev?._id === chat._id) return null;
+
+    // different chat → open new menu
+    return chat;
+  });
+};
 
     const handleDeleteChat = async (e) => {
         e.stopPropagation(); // Prevent bubbling when clicking delete
@@ -60,25 +63,21 @@ const ChatList = ({ chats, onChatSelect }) => {
         }
     };
 
-    useEffect(() => {
-        const handleClickOutside = (event) => {
-            if (menuRef.current && !menuRef.current.contains(event.target)) {
-                setMenuChat(null);
-            }
-        };
+   useEffect(() => {
+  const handleClickOutside = (e) => {
+    if (menuRef.current && !menuRef.current.contains(e.target)) {
+      setMenuChat(null);
+    }
+  };
 
-        if (menuChat) {
-            // Using mousedown to catch clicks before they trigger other click handlers if necessary
-            document.addEventListener('mousedown', handleClickOutside);
-            document.addEventListener('touchstart', handleClickOutside);
-        }
+  if (menuChat) {
+    document.addEventListener('click', handleClickOutside);
+  }
 
-
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-            document.removeEventListener('touchstart', handleClickOutside);
-        };
-    }, [menuChat]);
+  return () => {
+    document.removeEventListener('click', handleClickOutside);
+  };
+}, [menuChat]);
 
     return (
         <div className="flex flex-col space-y-2 h-full overflow-y-auto p-2 scrollbar-hide">
@@ -131,7 +130,12 @@ const ChatItem = ({ chat, sender, isSelected, onSelect, onThreeDotsClick }) => {
                 ? 'bg-theme-primary text-white'
                 : 'bg-theme-bg-secondary hover:bg-theme-bg-tertiary text-theme-text-primary'
                 }`}
-            onClick={() => onSelect(chat)}
+            onClick={(e) => {
+                // if click came from 3 dots, ignore
+                if (e.target.closest('[data-menu-btn]')) return;
+                onSelect(chat);
+            }}
+
             onContextMenu={(e) => e.preventDefault()} // Disable context menu
         >
             {/* Profile Picture or Group Icon */}
@@ -185,14 +189,18 @@ const ChatItem = ({ chat, sender, isSelected, onSelect, onThreeDotsClick }) => {
 
 
             {/* Three Dots Menu (All Devices) */}
-            <button
-                onMouseDown={(e) => { e.stopPropagation(); }}
-                onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    onThreeDotsClick(chat, e);
-                }}
-                className="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-full hover:bg-theme-bg-tertiary transition-all text-theme-text-secondary hover:text-theme-text-primary z-10"
+          <button data-menu-btn
+  
+      onPointerDown={(e) => {
+    e.preventDefault();
+    e.stopPropagation();
+  }}
+onClick={(e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onThreeDotsClick(chat, e);
+  }}
+      className="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-full hover:bg-theme-bg-tertiary transition-all text-theme-text-secondary hover:text-theme-text-primary z-10"
                 aria-label="Chat options"
             >
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
