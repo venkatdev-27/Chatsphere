@@ -5,7 +5,7 @@ import { deleteMessageForMe, deleteMessageForEveryone } from '../redux/thunks/me
 import { getSocket } from '../services/socket';
 import { getProfilePicUrl } from '../utils/authHelper';
 
-const Message = ({ message, isGroupChat }) => {
+const Message = ({ message, isGroupChat, onImageClick }) => {
     const { user } = useSelector((state) => state.auth);
     const { selectedChat } = useSelector((state) => state.chat);
     const dispatch = useDispatch();
@@ -151,7 +151,12 @@ const Message = ({ message, isGroupChat }) => {
                                 {message.fileType === 'video' ? (
                                     <video src={getProfilePicUrl(message.file)} controls className="max-w-full rounded-lg max-h-60" />
                                 ) : (
-                                    <img src={getProfilePicUrl(message.file)} alt="attachment" className="max-w-full rounded-lg max-h-60" />
+                                    <img
+                                        src={getProfilePicUrl(message.file)}
+                                        alt="attachment"
+                                        className="max-w-full rounded-lg max-h-60 cursor-pointer hover:opacity-90 transition-opacity"
+                                        onClick={() => onImageClick && onImageClick(getProfilePicUrl(message.file))}
+                                    />
                                 )}
                             </div>
                         )}

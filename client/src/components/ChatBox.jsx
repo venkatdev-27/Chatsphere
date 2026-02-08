@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { fetchMessages, sendMessage } from '../redux/thunks/messageThunks';
 import { markChatAsRead } from '../redux/thunks/chatThunks';
 import Message from './Message';
+import ImagePreviewModal from './ImagePreviewModal';
 import { getSocket } from '../services/socket';
 import { addMessage, handleMessageDeleted } from '../redux/slices/messageSlice';
 import UpdateGroupChatModal from './UpdateGroupChatModal';
@@ -17,6 +18,7 @@ const ChatBox = ({ onBackClick }) => {
     const [newMessage, setNewMessage] = useState('');
     const [file, setFile] = useState(null);
     const [previewUrl, setPreviewUrl] = useState(null);
+    const [previewImage, setPreviewImage] = useState(null);
     const messagesContainerRef = useRef(null);
     const prevScrollHeightRef = useRef(null);
     const messagesEndRef = useRef(null);
@@ -228,7 +230,11 @@ const ChatBox = ({ onBackClick }) => {
                                         </span>
                                     </div>
                                 )}
-                                <Message message={msg} isGroupChat={selectedChat.isGroupChat} />
+                                <Message
+                                    message={msg}
+                                    isGroupChat={selectedChat.isGroupChat}
+                                    onImageClick={(url) => setPreviewImage(url)}
+                                />
                             </React.Fragment>
                         );
                     })
@@ -317,6 +323,13 @@ const ChatBox = ({ onBackClick }) => {
                 onClose={() => setUpdateModalOpen(false)}
                 fetchMessages={() => dispatch(fetchMessages({ chatId: selectedChat._id, limit: 20 }))}
             />
+
+            {previewImage && (
+                <ImagePreviewModal
+                    imageSrc={previewImage}
+                    onClose={() => setPreviewImage(null)}
+                />
+            )}
         </div >
     );
 };
