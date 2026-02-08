@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { createGroupChat } from '../redux/thunks/chatThunks';
 import { searchUsers } from '../redux/thunks/authThunks';
 import { clearSearchResults } from '../redux/slices/authSlice';
-import { toast } from 'react-toastify';
 import { getProfilePicUrl } from '../utils/authHelper';
 
 const GroupChatModal = ({ isOpen, onClose }) => {
@@ -25,7 +24,6 @@ const GroupChatModal = ({ isOpen, onClose }) => {
 
     const handleGroup = (userToAdd) => {
         if (selectedUsers.includes(userToAdd)) {
-            toast.warning('User already added');
             return;
         }
         setSelectedUsers([...selectedUsers, userToAdd]);
@@ -52,12 +50,11 @@ const GroupChatModal = ({ isOpen, onClose }) => {
 
     const handleSubmit = async () => {
         if (!groupChatName || !selectedUsers) {
-            toast.warning('Please fill all the fields');
             return;
         }
 
         if (selectedUsers.length < 2) {
-            toast.warning('More than 2 users are required to form a group chat');
+            // Ideally show a validation error message in UI
             return;
         }
 
@@ -69,10 +66,8 @@ const GroupChatModal = ({ isOpen, onClose }) => {
             })).unwrap();
             setLoading(false);
             onClose();
-            toast.success('New Group Chat Created!');
         } catch (error) {
             setLoading(false);
-            toast.error(error || 'Failed to Create Group');
         }
     };
 

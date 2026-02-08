@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { renameGroup, addToGroup, removeFromGroup } from '../redux/thunks/chatThunks';
 import { searchUsers } from '../redux/thunks/authThunks';
 import { clearSearchResults } from '../redux/slices/authSlice';
-import { toast } from 'react-toastify';
 import { getProfilePicUrl } from '../utils/authHelper';
 
 const UpdateGroupChatModal = ({ isOpen, onClose, fetchMessages }) => {
@@ -30,7 +29,6 @@ const UpdateGroupChatModal = ({ isOpen, onClose, fetchMessages }) => {
 
     const handleRemove = async (u) => {
         if (selectedChat.groupAdmin._id !== user._id && u._id !== user._id) {
-            toast.error('Only admins can remove someone!');
             return;
         }
 
@@ -39,20 +37,16 @@ const UpdateGroupChatModal = ({ isOpen, onClose, fetchMessages }) => {
             await dispatch(removeFromGroup({ chatId: selectedChat._id, userId: u._id })).unwrap();
             u._id === user._id ? onClose() : fetchMessages();
             setLoading(false);
-            toast.success(u._id === user._id ? 'You left the group' : 'User Removed');
         } catch (error) {
             setLoading(false);
-            toast.error(error.message || 'Failed to remove user');
         }
     };
 
     const handleAddUser = (u) => {
         if (selectedChat.users.find((i) => i._id === u._id)) {
-            toast.error('User Already in group!');
             return;
         }
         if (usersToAdd.find((i) => i._id === u._id)) {
-            toast.warning('User already selected!');
             return;
         }
         setUsersToAdd([...usersToAdd, u]);
@@ -98,12 +92,10 @@ const UpdateGroupChatModal = ({ isOpen, onClose, fetchMessages }) => {
             setGroupChatName('');
             setUsersToAdd([]);
             fetchMessages(); // Refresh UI
-            toast.success('Changes Saved!');
             onClose();
 
         } catch (error) {
             setLoading(false);
-            toast.error(error.message || 'Failed to save changes');
         }
     };
 

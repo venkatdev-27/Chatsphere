@@ -65,7 +65,7 @@ const ChatBox = ({ onBackClick }) => {
     // Auto-scroll on mobile keyboard open
     useEffect(() => {
         const handleResize = () => {
-            if (document.activeElement === fileInputRef.current?.nextElementSibling) {
+            if (document.activeElement === messageInputRef.current) {
                 // Sligth delay to allow viewport to resize
                 setTimeout(() => {
                     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
@@ -100,7 +100,10 @@ const ChatBox = ({ onBackClick }) => {
         const selectedFile = e.target.files[0];
         if (selectedFile) {
             if (selectedFile.size > 10000000) {
-                alert("File size exceeds 10MB limit.");
+                // Inline error or just ignore? User asked to remove toast/alert.
+                // We'll show a system-like message transiently or just clear file
+                setNewMessage("File too large (max 10MB)");
+                setTimeout(() => setNewMessage(""), 3000);
                 return;
             }
             setFile(selectedFile);
@@ -212,7 +215,7 @@ const ChatBox = ({ onBackClick }) => {
             <div
                 ref={messagesContainerRef}
                 onScroll={handleScroll}
-                className="flex-1 overflow-y-auto p-4 custom-scrollbar bg-theme-bg-primary space-y-4 min-h-0"
+                className="flex-1 overflow-y-auto p-4 pb-20 md:pb-4 custom-scrollbar bg-theme-bg-primary space-y-4 min-h-0"
             >
                 {loading ? (
                     <div className="text-center text-theme-text-muted mt-5">Loading messages...</div>
@@ -257,7 +260,7 @@ const ChatBox = ({ onBackClick }) => {
                         </p>
                     </div>
                 ) : (
-                    <form onSubmit={handleSendMessage} className="w-full p-4 bg-theme-bg-tertiary border-t border-theme-border flex items-center relative">
+                    <form onSubmit={handleSendMessage} className="w-full p-4 bg-theme-bg-tertiary border-t border-theme-border flex items-center relative fixed bottom-0 md:static z-10">
                         {/* File Preview */}
                         {file && (
                             <div className="absolute bottom-full left-4 bg-theme-bg-tertiary border border-theme-border rounded-lg p-2 shadow-lg mb-2">
@@ -324,12 +327,14 @@ const ChatBox = ({ onBackClick }) => {
                 fetchMessages={() => dispatch(fetchMessages({ chatId: selectedChat._id, limit: 20 }))}
             />
 
-            {previewImage && (
-                <ImagePreviewModal
-                    imageSrc={previewImage}
-                    onClose={() => setPreviewImage(null)}
-                />
-            )}
+            {
+                previewImage && (
+                    <ImagePreviewModal
+                        imageSrc={previewImage}
+                        onClose={() => setPreviewImage(null)}
+                    />
+                )
+            }
         </div >
     );
 };

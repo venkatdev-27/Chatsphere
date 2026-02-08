@@ -4,6 +4,8 @@ import useLongPress from '../hooks/useLongPress';
 import { deleteMessageForMe, deleteMessageForEveryone } from '../redux/thunks/messageThunks';
 import { getSocket } from '../services/socket';
 import { getProfilePicUrl } from '../utils/authHelper';
+import SystemMessage from './SystemMessage';
+
 
 const Message = ({ message, isGroupChat, onImageClick }) => {
     const { user } = useSelector((state) => state.auth);
@@ -66,6 +68,10 @@ const Message = ({ message, isGroupChat, onImageClick }) => {
             console.error('Delete for everyone failed:', error);
         }
     };
+
+    if (message.type === 'system') {
+        return <SystemMessage message={message} />;
+    }
 
     if (message.isDeletedForEveryone) {
         return (

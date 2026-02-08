@@ -1,6 +1,29 @@
 const Chat = require('../models/Chat');
 const User = require('../models/userModel');
 const { client } = require('../config/redis');
+const { getIO } = require('../services/socketService');
+const Message = require('../models/Message');
+
+const createAndEmitSystemMessage = async (chatId, content, excludeUserId = null) => {
+    try {
+        const messageData = {
+            chat: chatId,
+            content: content,
+            type: "system",
+            sender: null // System messages have no sender
+        };
+        
+        let message = await Message.create(messageData);
+        message = await message.populate("chat");
+        
+        const io = getIO();
+        io.in(chatId.toString()).emit("receive_message", message);
+        
+        return message;
+    } catch (error) {
+        console.error("Failed to crate system message:", error);
+    }
+};
 
 // @desc    Access or Create a One-to-One Chat 💬
 // @route   POST /api/chat
@@ -143,6 +166,12 @@ const createGroupChat = async (req, res) => {
         await client.del(`chats:${u._id}`);
     });
 
+    users.forEach(async (u) => {
+        await client.del(`chats:${u._id}`);
+    });
+
+    await createAndEmitSystemMessage(groupChat._id, `Group "${req.body.name}" created`);
+
     res.status(200).json(fullGroupChat);
   } catch (error) {
     res.status(400);
@@ -195,6 +224,8 @@ const renameGroup = async (req, res) => {
 
     res.json(updatedChat);
 
+    await createAndEmitSystemMessage(chatId, `Group name changed to "${chatName}"`);
+
   } catch (error) {
     res.status(400);
     throw new Error(error.message);
@@ -241,6 +272,14 @@ const addToGroup = async (req, res) => {
     added.users.forEach(async (u) => {
         await client.del(`chats:${u._id}`);
     });
+    
+    // Find the user details to add to the system message
+    const User = require('../models/userModel');
+    const userAdded = await User.findById(userId);
+    const addedName = userAdded ? userAdded.username : "A user";
+    
+    await createAndEmitSystemMessage(chatId, `${addedName} was added to the group`);
+
     res.json(added);
   } catch (error) {
     res.status(400);
@@ -284,6 +323,18 @@ const removeFromGroup = async (req, res) => {
     });
     await client.del(`chats:${userId}`);
     res.json(removed);
+
+    // Find the user details
+    const User = require('../models/userModel');
+    const userRemoved = await User.findById(userId);
+    const removedName = userRemoved ? userRemoved.username : "A user";
+    
+    // Check if they left themselves or were removed
+    const message = userId === req.user._id.toString() 
+        ? `${removedName} left the group` 
+        : `${removedName} was removed from the group`;
+
+    await createAndEmitSystemMessage(chatId, message);
   } catch (error) {
     res.status(400);
     throw new Error(error.message);

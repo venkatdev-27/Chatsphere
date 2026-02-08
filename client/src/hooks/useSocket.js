@@ -2,7 +2,6 @@ import { useEffect, useRef } from 'react';
 import { connectSocket, disconnectSocket, getSocket } from '../services/socket';
 import { useDispatch, useSelector } from 'react-redux';
 import { addMessage, handleMessageDeleted } from '../redux/slices/messageSlice';
-import { toast } from 'react-toastify';
 import { addNotification, updateChatLatestMessage, setOnlineUsers, addUserOnline, removeUserOnline, updateUserInChats } from '../redux/slices/chatSlice';
 
 const useSocket = (user) => {
@@ -44,7 +43,6 @@ const useSocket = (user) => {
            
            if (!isCurrentChat) {
                dispatch(addNotification(newMessage));
-               toast.info(`New message from ${newMessage.sender.username}: ${newMessage.content.substring(0, 20)}...`);
            } else {
                dispatch(addMessage(newMessage));
            }

@@ -1,8 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import Chat from './pages/Chat';
 import { useSelector, useDispatch } from 'react-redux';
 import { useEffect } from 'react';
@@ -43,7 +41,6 @@ function App() {
         />
         <Route path="/" element={<Navigate to="/chat" />} />
       </Routes>
-      <ToastContainer position="top-right" autoClose={3000} />
     </Router>
   );
 }

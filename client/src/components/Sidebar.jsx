@@ -6,7 +6,6 @@ import { logout, clearSearchResults } from '../redux/slices/authSlice';
 import { updateProfile, searchUsers, fetchAllUsers } from '../redux/thunks/authThunks';
 import { disconnectSocket } from '../services/socket';
 import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
 import GroupChatModal from './GroupChatModal';
 import ThemeToggle from './ThemeToggle';
 import { getProfilePicUrl } from '../utils/authHelper';
@@ -68,10 +67,9 @@ const Sidebar = ({ onChatSelect }) => {
 
             try {
                 await dispatch(updateProfile(formData)).unwrap();
-                toast.success('Profile picture updated! 🎉');
                 setImageToCrop(null);
             } catch (error) {
-                toast.error(error || 'Failed to update profile picture');
+                console.error(error || 'Failed to update profile picture');
             }
         }
     };
@@ -111,12 +109,11 @@ const Sidebar = ({ onChatSelect }) => {
         if (chatToDelete) {
             try {
                 await dispatch(deleteChat(chatToDelete._id)).unwrap();
-                toast.success('Chat deleted successfully');
             } catch (error) {
-                toast.error('Failed to delete chat');
+                console.error('Failed to delete chat');
             }
         } else {
-            toast.info('No chat history to delete');
+            console.log('No chat history to delete');
         }
     };
 
