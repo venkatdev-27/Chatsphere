@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Chat from './pages/Chat';
+import Home from './pages/Home';
 import AuthLayout from './components/layout/AuthLayout';
 import { checkAuth } from './redux/thunks/authThunks';
 import SocketStatusBanner from './components/SocketStatusBanner';
@@ -36,6 +37,7 @@ function App() {
       <ErrorBoundary>
         <SocketStatusBanner />
         <Routes>
+          <Route path="/" element={<Home />} />
           <Route element={<AuthLayout />}>
             <Route path="/login" element={isAuthenticated ? <Navigate to="/chat" replace /> : <Login />} />
             <Route path="/signup" element={isAuthenticated ? <Navigate to="/chat" replace /> : <Signup />} />
@@ -49,8 +51,6 @@ function App() {
               </ProtectedRoute>
             }
           />
-
-          <Route path="/" element={<Navigate to="/chat" replace />} />
         </Routes>
       </ErrorBoundary>
     </Router>
