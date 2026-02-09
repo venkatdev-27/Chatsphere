@@ -35,12 +35,12 @@
   /* Same as primary-color in light mode */
 }
 
+/* ---------- GLOBAL BASE (NO THEME COLORS) ---------- */
 body {
-  background-color: var(--bg-primary);
-  color: var(--text-primary);
   @apply font-sans;
 }
 
+/* ---------- ROOT SIZING ---------- */
 html,
 body,
 #root {
@@ -49,7 +49,7 @@ body,
   overscroll-behavior: none;
 }
 
-/* Custom Scrollbar */
+/* ---------- CUSTOM SCROLLBAR ---------- */
 .custom-scrollbar {
   scroll-behavior: smooth;
 }
@@ -60,16 +60,16 @@ body,
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
-  background: var(--bg-tertiary);
+  background: #0f172a; /* slate-900 */
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: var(--text-muted);
+  background: #64748b; /* slate-500 */
   border-radius: 3px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: var(--text-secondary);
+  background: #94a3b8; /* slate-400 */
 }
 
 /* Mobile specific adjustments */
@@ -164,8 +164,8 @@ body,
     border-color: hsl(var(--border));
   }
 
+  /* Do NOT control theme colors globally */
   body {
-    background-color: hsl(var(--background));
-    color: hsl(var(--foreground));
+    @apply font-sans;
   }
 }

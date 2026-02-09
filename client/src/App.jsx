@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Chat from './pages/Chat';
+import AuthLayout from './components/layout/AuthLayout';
 import { useSelector, useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 import { checkAuth } from './redux/thunks/authThunks';
@@ -22,15 +23,17 @@ function App() {
   }, [dispatch]);
 
   if (loading) {
-    return <div className="flex items-center justify-center h-screen bg-gray-900 text-white">Loading...</div>;
+    return <div className="flex items-center justify-center h-screen bg-slate-900 text-white">Loading...</div>;
   }
 
   return (
     <Router>
       <SocketStatusBanner />
       <Routes>
-        <Route path="/login" element={isAuthenticated ? <Navigate to="/chat" /> : <Login />} />
-        <Route path="/signup" element={isAuthenticated ? <Navigate to="/chat" /> : <Signup />} />
+        <Route element={<AuthLayout />}>
+          <Route path="/login" element={isAuthenticated ? <Navigate to="/chat" /> : <Login />} />
+          <Route path="/signup" element={isAuthenticated ? <Navigate to="/chat" /> : <Signup />} />
+        </Route>
         <Route
           path="/chat"
           element={

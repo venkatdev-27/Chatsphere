@@ -5,13 +5,14 @@ import { clearError } from '../redux/slices/authSlice';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { LockOpen } from '@/components/animate-ui/icons/lock-open';
-import { StarsBackground } from '@/components/animate-ui/components/backgrounds/stars';
+
 
 const Login = () => {
     const [formData, setFormData] = useState({ mobile: '', password: '' });
     const [showPassword, setShowPassword] = useState(false);
     const [shouldShake, setShouldShake] = useState(false);
     const [inputError, setInputError] = useState(null); // 'mobile' | 'password' | null
+    const [focusedInput, setFocusedInput] = useState(null);
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -61,104 +62,127 @@ const Login = () => {
     };
 
     return (
-        <StarsBackground
-            starColor="#ffffff"
-            speed={20}
-            pointerEvents={false}
-            className="min-h-screen flex items-center justify-center p-4 bg-[radial-gradient(ellipse_at_bottom,_#27272a_0%,_#09090b_100%)]"
+        <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
+            className="w-full"
         >
-            {/* Dark Overlay for Readability */}
-            <div className="absolute inset-0 bg-zinc-950/40 backdrop-blur-[2px]" />
+            <div className="bg-slate-900 rounded-3xl border border-slate-700/50 shadow-2xl shadow-indigo-500/10 p-8">
+                {/* Header */}
+                <div className="text-center mb-8">
+                    <h1 className="text-3xl font-bold bg-gradient-to-r from-indigo-400 to-violet-400 bg-clip-text text-transparent mb-2">
+                        Welcome Back
+                    </h1>
+                    <p className="text-slate-400 text-sm">Sign in to continue to ChatSphere</p>
+                </div>
 
-            {/* Login Card */}
-            <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
-                className="relative w-full max-w-md z-10"
-            >
-                <div className="bg-zinc-800/30 backdrop-blur-xl rounded-2xl border border-zinc-700/50 shadow-2xl p-8">
-                    {/* Header */}
-                    <div className="text-center mb-8">
-                        <h1 className="text-3xl font-bold text-zinc-100 mb-2">Welcome ChatSphere</h1>
-                        <p className="text-zinc-400 text-sm">Sign in to continue to your chats</p>
-                    </div>
-
-                    {/* Form */}
-                    <form onSubmit={handleSubmit} className="space-y-5">
-                        {/* Mobile Number */}
-                        <motion.div animate={inputError === 'mobile' && shouldShake ? { x: [-10, 10, -10, 10, 0] } : {}}>
-                            <label className="text-sm text-zinc-300 font-medium">Mobile Number</label>
+                {/* Form */}
+                <form onSubmit={handleSubmit} className="space-y-6">
+                    {/* Mobile Number */}
+                    <motion.div animate={inputError === 'mobile' && shouldShake ? { x: [-10, 10, -10, 10, 0] } : {}}>
+                        <label
+                            className={`block text-sm font-medium mb-2 transition-colors duration-200 ${focusedInput === 'mobile' ? 'text-slate-300' : 'text-slate-400'
+                                }`}
+                        >
+                            Mobile Number
+                        </label>
+                        <div className="relative group">
+                            <div className={`absolute -inset-0.5 bg-gradient-to-r from-indigo-500 to-violet-500 rounded-lg blur opacity-0 group-hover:opacity-30 transition duration-1000 group-hover:duration-200 ${focusedInput === 'mobile' ? 'opacity-50' : ''
+                                }`}></div>
                             <input
                                 type="tel"
                                 name="mobile"
                                 value={formData.mobile}
                                 onChange={handleChange}
-                                className={`w-full px-4 py-3 mt-2 rounded-lg bg-zinc-900/60 border ${inputError === 'mobile'
-                                    ? 'border-red-500 ring-2 ring-red-500/30'
-                                    : 'border-zinc-700/50 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
-                                    } outline-none transition-all duration-200 text-zinc-100 placeholder-zinc-500`}
+                                onFocus={() => setFocusedInput('mobile')}
+                                onBlur={() => setFocusedInput(null)}
+
+                                className={`relative w-full px-4 py-3.5 rounded-xl bg-slate-800 border ${inputError === 'mobile'
+                                    ? 'border-red-500/50 ring-1 ring-red-500/50'
+                                    : 'border-slate-700 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500'
+                                    } outline-none transition-all duration-200 text-slate-100 placeholder-slate-500`}
                                 placeholder="Enter your mobile number"
                             />
-                            {inputError === 'mobile' && (
-                                <p className="text-red-400 text-xs mt-1.5">
-                                    {errorMessage || 'Mobile number not found'}
-                                </p>
-                            )}
-                        </motion.div>
+                        </div>
+                        {inputError === 'mobile' && (
+                            <p className="text-red-400 text-xs mt-1.5 ml-1">
+                                {errorMessage || 'Mobile number not found'}
+                            </p>
+                        )}
+                    </motion.div>
 
-                        {/* Password */}
-                        <motion.div animate={inputError === 'password' && shouldShake ? { x: [-10, 10, -10, 10, 0] } : {}}>
-                            <label className="text-sm text-zinc-300 font-medium">Password</label>
-                            <div className="relative mt-2">
+                    {/* Password */}
+                    <motion.div animate={inputError === 'password' && shouldShake ? { x: [-10, 10, -10, 10, 0] } : {}}>
+                        <label
+                            className={`block text-sm font-medium mb-2 transition-colors duration-200 ${focusedInput === 'password' ? 'text-slate-300' : 'text-slate-400'
+                                }`}
+                        >
+                            Password
+                        </label>
+                        <div className="relative group">
+                            <div className={`absolute -inset-0.5 bg-gradient-to-r from-indigo-500 to-violet-500 rounded-lg blur opacity-0 group-hover:opacity-20 transition duration-1000 group-hover:duration-200 ${focusedInput === 'password' ? 'opacity-50' : ''
+                                }`}></div>
+                            <div className="relative">
                                 <input
                                     type={showPassword ? 'text' : 'password'}
                                     name="password"
                                     value={formData.password}
                                     onChange={handleChange}
-                                    className={`w-full px-4 py-3 pr-12 rounded-lg bg-zinc-900/60 border ${inputError === 'password'
-                                        ? 'border-red-500 ring-2 ring-red-500/30'
-                                        : 'border-zinc-700/50 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
-                                        } outline-none transition-all duration-200 text-zinc-100 placeholder-zinc-500`}
+                                    onFocus={() => setFocusedInput('password')}
+                                    onBlur={() => setFocusedInput(null)}
+
+                                    className={`w-full px-4 py-3.5 pr-12 rounded-xl bg-slate-800 border ${inputError === 'password'
+                                        ? 'border-red-500/50 ring-1 ring-red-500/50'
+                                        : 'border-slate-700 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500'
+                                        } outline-none transition-all duration-200 text-slate-100 placeholder-slate-500`}
                                     placeholder="Enter your password"
                                 />
                                 <button
                                     type="button"
                                     onClick={() => setShowPassword(!showPassword)}
-                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300 transition-colors p-1"
+                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 transition-colors p-1"
                                 >
                                     <LockOpen animateOnHover={true} />
                                 </button>
                             </div>
-                            {inputError === 'password' && (
-                                <p className="text-red-400 text-xs mt-1.5">
-                                    {errorMessage || 'Password is incorrect'}
-                                </p>
-                            )}
-                        </motion.div>
+                        </div>
+                        {inputError === 'password' && (
+                            <p className="text-red-400 text-xs mt-1.5 ml-1">
+                                {errorMessage || 'Password is incorrect'}
+                            </p>
+                        )}
+                    </motion.div>
 
-                        {/* Submit Button */}
-                        <button
-                            type="submit"
-                            disabled={loading}
-                            className="w-full py-3 mt-6 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-800 text-white font-semibold rounded-lg transition-all duration-200 shadow-lg shadow-blue-900/30 disabled:opacity-50 disabled:cursor-not-allowed"
-                        >
-                            {loading ? 'Signing In...' : 'Sign In'}
-                        </button>
-                    </form>
+                    {/* Submit Button */}
+                    <button
+                        type="submit"
+                        disabled={loading}
+                        className="relative w-full py-4 mt-2 bg-indigo-500 hover:bg-indigo-600 disabled:bg-slate-800 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg shadow-indigo-500/20 disabled:shadow-none disabled:opacity-50 disabled:cursor-not-allowed transform active:scale-[0.98]"
+                    >
+                        {loading ? (
+                            <span className="flex items-center justify-center gap-2">
+                                <svg className="animate-spin h-5 w-5 text-white" viewBox="0 0 24 24">
+                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                                Signing In...
+                            </span>
+                        ) : 'Sign In'}
+                    </button>
+                </form>
 
-                    {/* Footer */}
-                    <div className="mt-6 text-center">
-                        <p className="text-zinc-400 text-sm">
-                            Don't have an account?{' '}
-                            <Link to="/signup" className="text-blue-500 hover:text-blue-400 font-medium transition-colors">
-                                Sign up
-                            </Link>
-                        </p>
-                    </div>
+                {/* Footer */}
+                <div className="mt-8 pt-6 border-t border-slate-700/50 text-center">
+                    <p className="text-slate-400 text-sm">
+                        Don't have an account?{' '}
+                        <Link to="/signup" className="text-indigo-400 hover:text-indigo-300 font-medium transition-colors hover:underline">
+                            Create an account
+                        </Link>
+                    </p>
                 </div>
-            </motion.div>
-        </StarsBackground>
+            </div>
+        </motion.div>
     );
 };
 
