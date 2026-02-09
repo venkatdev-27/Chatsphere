@@ -95,8 +95,8 @@ const Sidebar = ({ onChatSelect }) => {
         dispatch(clearSearchResults());
     };
 
-    const accessUserChat = (userId) => {
-        dispatch(accessChat(userId));
+    const accessUserChat = async (userId) => {
+        await dispatch(accessChat(userId));
         setSearchQuery('');
         dispatch(clearSearchResults());
         if (onChatSelect) onChatSelect();
@@ -286,8 +286,8 @@ const Sidebar = ({ onChatSelect }) => {
                         return (
                             <div
                                 key={u._id}
-                                onClick={() => {
-                                    dispatch(accessChat(u._id));
+                                onClick={async () => {
+                                    await dispatch(accessChat(u._id));
                                     if (onChatSelect) onChatSelect();
                                 }}
                                 className="flex flex-col items-center min-w-[60px] cursor-pointer group relative p-1 rounded-lg hover:bg-theme-bg-secondary transition-colors"
