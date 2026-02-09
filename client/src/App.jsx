@@ -7,6 +7,7 @@ import Chat from './pages/Chat';
 import Home from './pages/Home';
 import AuthLayout from './components/layout/AuthLayout';
 import { checkAuth } from './redux/thunks/authThunks';
+import Loader from './components/animate-ui/icons/loader';
 import SocketStatusBanner from './components/SocketStatusBanner';
 import ErrorBoundary from './components/common/ErrorBoundary';
 
@@ -26,8 +27,8 @@ function App() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        Loading...
+      <div className="flex items-center justify-center min-h-screen bg-gray-950">
+        <Loader size={50} className="text-indigo-400" />
       </div>
     );
   }
