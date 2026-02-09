@@ -29,7 +29,9 @@ const ChatList = ({ chats, onChatSelect }) => {
 
     const handleChatSelect = (chat) => {
         dispatch(setSelectedChat(chat));
-        if (onChatSelect) onChatSelect(); // Trigger mobile view change
+        if (onChatSelect) onChatSelect();
+            setMenuChat(null); // 👈 add this
+ // Trigger mobile view change
     };
 
     const handleLongPress = (chat, event) => {
@@ -119,8 +121,8 @@ const ChatItem = ({ chat, sender, isSelected, onSelect, onLongPress, menuChat })
                 }`}
             onClick={(e) => {
                 if (
-                    e.target.closest('[data-menu-btn]') ||
-                    menuChat?._id === chat._id
+                    e.target.closest('[data-menu-btn]')
+
                 ) {
                     return;
                 }
