@@ -19,37 +19,39 @@ const Footer = () => {
 
                         <div className="flex space-x-5 mt-5">
                             <a
-                                href="https://github.com/venkatdev-27"
+                                href="https://github.com/venkatdev-27/ChatSphere"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="text-gray-400 hover:text-white hover:scale-110 transition-all"
+                                className="text-gray-400 transition-transform duration-200 ease-out hover:text-white hover:scale-125"
                                 aria-label="GitHub"
                             >
-                                <Github size={22} />
+                                <Github size={24} />
                             </a>
                             <a
                                 href="https://linkedin.com/in/venkat18"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="text-gray-400 hover:text-[#0A66C2] hover:scale-110 transition-all"
+                                className="text-gray-400 transition-transform duration-200 ease-out hover:text-white hover:scale-125"
                                 aria-label="LinkedIn"
                             >
-                                <Linkedin size={22} />
+                                <Linkedin size={24} />
                             </a>
                             <a
-                                href="#"
-                                className="text-gray-400 hover:text-white hover:scale-110 transition-all"
-                                aria-label="Twitter"
+                                href="https://x.com/VenkatK04181110"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-gray-400 transition-transform duration-200 ease-out hover:text-white hover:scale-125"
+                                aria-label="X"
                             >
-                                <Twitter size={22} />
+                                <Twitter size={24} />
                             </a>
                         </div>
                     </div>
 
-                    {/* Product */}
+                    {/* Services */}
                     <div>
                         <h4 className="text-sm font-semibold text-gray-300 mb-4 uppercase tracking-wider">
-                            Product
+                            Services
                         </h4>
                         <ul className="space-y-3 text-sm text-gray-400">
                             <li>
