@@ -5,10 +5,13 @@ import { markChatAsRead } from '../redux/thunks/chatThunks';
 import Message from './Message';
 import ImagePreviewModal from './ImagePreviewModal';
 import { getSocket } from '../services/socket';
-import { addMessage, handleMessageDeleted } from '../redux/slices/messageSlice';
+import {  messageDeleted } from '../redux/slices/messageSlice';
 import UpdateGroupChatModal from './UpdateGroupChatModal';
 import { formatDateLabel, isSameDay } from '../utils/dateHelper';
 import { getProfilePicUrl } from '../utils/authHelper';
+
+
+
 
 const ChatBox = ({ onBackClick }) => {
     const dispatch = useDispatch();
@@ -26,24 +29,27 @@ const ChatBox = ({ onBackClick }) => {
     const messageInputRef = useRef(null);
     const [updateModalOpen, setUpdateModalOpen] = useState(false);
 
-    useEffect(() => {
-        if (selectedChat) {
-            dispatch(fetchMessages({ chatId: selectedChat._id, limit: 20 }));
-            dispatch(markChatAsRead(selectedChat._id)); // Mark messages as read
-            const socket = getSocket();
-            socket.emit('join_room', selectedChat._id);
+useEffect(() => {
+  if (!selectedChat) return;
 
-            const handleMessageDeleted = (data) => {
-                dispatch(handleMessageDeleted(data));
-            };
+  dispatch(fetchMessages({ chatId: selectedChat._id, limit: 20 }));
+  dispatch(markChatAsRead(selectedChat._id));
 
-            socket.on('message_deleted', handleMessageDeleted);
+  const socket = getSocket();
 
-            return () => {
-                socket.off('message_deleted', handleMessageDeleted);
-            };
-        }
-    }, [selectedChat, dispatch]);
+  const handleMessageDeleted = (data) => {
+    dispatch(messageDeleted(data));
+  };
+
+  socket.emit('join_room', selectedChat._id);
+  socket.on('message_deleted', handleMessageDeleted);
+
+  return () => {
+    socket.off('message_deleted', handleMessageDeleted);
+    socket.emit('leave_room', selectedChat._id); // ✅ ADD THIS
+  };
+}, [selectedChat, dispatch]);
+
 
     useEffect(() => {
         return () => {

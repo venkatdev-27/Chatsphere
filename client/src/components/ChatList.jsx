@@ -20,19 +20,18 @@ const ChatList = ({ chats, onChatSelect }) => {
     const { selectedChat } = useSelector((state) => state.chat);
     const { user } = useSelector((state) => state.auth);
     const [menuChat, setMenuChat] = useState(null);
-    const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0 });
-    const menuRef = useRef(null);
+
+
 
     const getSender = (loggedUser, users) => {
         return users[0]._id === loggedUser._id ? users[1] : users[0];
     };
 
     const handleChatSelect = (chat) => {
-        dispatch(setSelectedChat(chat));
-        if (onChatSelect) onChatSelect();
-            setMenuChat(null); // 👈 add this
- // Trigger mobile view change
-    };
+    dispatch(setSelectedChat(chat));
+    onChatSelect?.();
+    setMenuChat(null);
+};
 
     const handleLongPress = (chat, event) => {
         event.preventDefault();
@@ -41,8 +40,7 @@ const ChatList = ({ chats, onChatSelect }) => {
         const element = event.currentTarget || event.target;
         if (!element) return;
 
-        const rect = element.getBoundingClientRect();
-        setMenuPosition({ top: rect.top + window.scrollY, left: rect.left });
+
         setMenuChat(chat);
     };
 

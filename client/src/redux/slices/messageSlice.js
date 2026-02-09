@@ -21,20 +21,21 @@ const messageSlice = createSlice({
     clearMessageError: (state) => {
       state.error = null;
     },
-    handleMessageDeleted: (state, action) => {
-      const { messageId, isDeletedForEveryone } = action.payload;
-      
-      if (isDeletedForEveryone) {
-        const messageIndex = state.messages.findIndex(m => m._id === messageId);
-        if (messageIndex !== -1) {
-          state.messages[messageIndex].isDeletedForEveryone = true;
-          state.messages[messageIndex].content = '';
-          state.messages[messageIndex].file = '';
-          state.messages[messageIndex].fileType = '';
-        }
-      } else {
-      }
-    },
+    messageDeleted: (state, action) => {
+  const { messageId, isDeletedForEveryone } = action.payload;
+
+  if (isDeletedForEveryone) {
+    const msg = state.messages.find(m => m._id === messageId);
+    if (msg) {
+      msg.isDeletedForEveryone = true;
+      msg.content = '';
+      msg.file = '';
+      msg.fileType = '';
+    }
+  } else {
+    state.messages = state.messages.filter(m => m._id !== messageId);
+  }
+},
     updateUserInMessages: (state, action) => {
         const updatedUser = action.payload;
         state.messages = state.messages.map(msg => {
@@ -89,5 +90,5 @@ const messageSlice = createSlice({
   },
 });
 
-export const { addMessage, clearMessageError, handleMessageDeleted, updateUserInMessages } = messageSlice.actions;
+export const { addMessage, clearMessageError, messageDeleted, updateUserInMessages } = messageSlice.actions;
 export default messageSlice.reducer;
