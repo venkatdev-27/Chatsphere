@@ -96,10 +96,12 @@ const Sidebar = ({ onChatSelect }) => {
     };
 
     const accessUserChat = async (userId) => {
-        await dispatch(accessChat(userId));
-        setSearchQuery('');
-        dispatch(clearSearchResults());
-        if (onChatSelect) onChatSelect();
+        const result = await dispatch(accessChat(userId));
+        if (accessChat.fulfilled.match(result)) {
+            setSearchQuery('');
+            dispatch(clearSearchResults());
+            if (onChatSelect) onChatSelect();
+        }
     };
 
     const handleDeleteChat = async (e, userId) => {
@@ -280,15 +282,17 @@ const Sidebar = ({ onChatSelect }) => {
 
             {/* Quick Access Users List (All Users with Status) */}
             <div className="px-4 py-2 border-b border-theme-border">
-                <div className="flex space-x-3 overflow-x-scroll pb-2 scrollbar-hide touch-pan-x">
+                <div className="flex space-x-3 overflow-x-scroll pb-2 scrollbar-hide ">
                     {allUsers.map((u) => {
                         const isOnline = onlineUsers.some(onlineUser => onlineUser._id === u._id);
                         return (
                             <div
                                 key={u._id}
                                 onClick={async () => {
-                                    await dispatch(accessChat(u._id));
-                                    if (onChatSelect) onChatSelect();
+                                    const result = await dispatch(accessChat(u._id));
+                                    if (accessChat.fulfilled.match(result)) {
+                                        if (onChatSelect) onChatSelect();
+                                    }
                                 }}
                                 className="flex flex-col items-center min-w-[60px] cursor-pointer group relative p-1 rounded-lg hover:bg-theme-bg-secondary transition-colors"
                             >
