@@ -52,22 +52,7 @@ const ChatList = ({ chats, onChatSelect }) => {
         }
     };
 
-    useEffect(() => {
-        const handleClickOutside = (e) => {
-            if (menuRef.current && !menuRef.current.contains(e.target)) {
-                setMenuChat(null);
-            }
-        };
-
-        if (menuChat) {
-            document.addEventListener('pointerdown', handleClickOutside);
-        }
-
-        return () => {
-            document.removeEventListener('pointerdown', handleClickOutside);
-        };
-    }, [menuChat]);
-
+    
 
     return (
         <div className="flex flex-col space-y-2 h-full overflow-y-auto p-2 scrollbar-hide">
@@ -118,14 +103,12 @@ const ChatItem = ({ chat, sender, isSelected, onSelect, onLongPress, menuChat })
                 : 'bg-theme-bg-secondary hover:bg-theme-bg-tertiary text-theme-text-primary'
                 }`}
             onClick={(e) => {
-                if (
-                    e.target.closest('[data-menu-btn]')
+    // ⛔ prevent selecting chat when long-press menu is open
+    if (menuChat?._id === chat._id) return;
 
-                ) {
-                    return;
-                }
-                onSelect(chat);
-            }}
+    onSelect(chat);
+}}
+
             {...longPressEvent}
             onContextMenu={(e) => e.preventDefault()} // Disable context menu
         >

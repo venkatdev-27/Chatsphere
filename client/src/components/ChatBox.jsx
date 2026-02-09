@@ -5,7 +5,7 @@ import { markChatAsRead } from '../redux/thunks/chatThunks';
 import Message from './Message';
 import ImagePreviewModal from './ImagePreviewModal';
 import { getSocket } from '../services/socket';
-import {  messageDeleted } from '../redux/slices/messageSlice';
+import { handleMessageDeleted } from '../redux/slices/messageSlice';
 import UpdateGroupChatModal from './UpdateGroupChatModal';
 import { formatDateLabel, isSameDay } from '../utils/dateHelper';
 import { getProfilePicUrl } from '../utils/authHelper';
@@ -37,15 +37,15 @@ useEffect(() => {
 
   const socket = getSocket();
 
-  const handleMessageDeleted = (data) => {
-    dispatch(messageDeleted(data));
+  const onSocketMessageDeleted = (data) => {
+    dispatch(handleMessageDeleted(data));
   };
 
   socket.emit('join_room', selectedChat._id);
-  socket.on('message_deleted', handleMessageDeleted);
+  socket.on('message_deleted', onSocketMessageDeleted);
 
   return () => {
-    socket.off('message_deleted', handleMessageDeleted);
+    socket.off('message_deleted', onSocketMessageDeleted);
     socket.emit('leave_room', selectedChat._id); // ✅ ADD THIS
   };
 }, [selectedChat, dispatch]);

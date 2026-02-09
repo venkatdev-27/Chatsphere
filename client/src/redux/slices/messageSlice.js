@@ -21,7 +21,7 @@ const messageSlice = createSlice({
     clearMessageError: (state) => {
       state.error = null;
     },
-    messageDeleted: (state, action) => {
+    handleMessageDeleted: (state, action) => {
   const { messageId, isDeletedForEveryone } = action.payload;
 
   if (isDeletedForEveryone) {
@@ -90,5 +90,5 @@ const messageSlice = createSlice({
   },
 });
 
-export const { addMessage, clearMessageError, messageDeleted, updateUserInMessages } = messageSlice.actions;
+export const { addMessage, clearMessageError, handleMessageDeleted, updateUserInMessages } = messageSlice.actions;
 export default messageSlice.reducer;
