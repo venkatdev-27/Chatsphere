@@ -150,43 +150,46 @@ const Message = ({ message, isGroupChat, onImageClick }) => {
                         onContextMenu={(e) => e.preventDefault()}
                         className="select-none cursor-pointer"
                     >
-                        {message.file && (
-                            <div className="mb-2">
-                                {message.fileType === 'video' ? (
-                                    <video src={getProfilePicUrl(message.file)} controls className="max-w-full rounded-lg max-h-60" />
-                                ) : message.fileType === 'image' ? (
-                                    <img
-                                        src={getProfilePicUrl(message.file)}
-                                        alt="attachment"
-                                        className="max-w-full rounded-lg max-h-60 cursor-pointer hover:opacity-90 transition-opacity"
-                                        onClick={() => onImageClick && onImageClick(getProfilePicUrl(message.file))}
-                                    />
-                                ) : message.fileType === 'document' ? (
-                                    <a
-                                        href={getProfilePicUrl(message.file)}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        download
-                                        className="flex items-center gap-3 p-3 rounded-lg transition-all hover:opacity-90 bg-theme-bg-secondary border border-theme-border"
-                                    >
-                                        <svg className="w-10 h-10 flex-shrink-0 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
-                                            <path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clipRule="evenodd" />
-                                        </svg>
-                                        <div className="flex-1 min-w-0">
-                                            <p className="text-sm font-medium truncate text-theme-text-primary">
-                                                {message.file.split('/').pop().split('_').slice(1).join('_') || 'Document'}
-                                            </p>
-                                            <p className="text-xs text-theme-text-muted">
-                                                Click to download
-                                            </p>
-                                        </div>
-                                        <svg className="w-5 h-5 flex-shrink-0 text-theme-text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                        </svg>
-                                    </a>
-                                ) : null}
-                            </div>
-                        )}
+                       {message.file && (
+  <div className="mb-2">
+    {message.fileType === 'video' ? (
+      <video
+        src={getProfilePicUrl(message.file)}
+        controls
+        preload="metadata"
+        className="max-w-full rounded-lg max-h-60"
+      />
+    ) : message.fileType === 'image' ? (
+      <img
+        src={getProfilePicUrl(message.file)}
+        loading="lazy"
+        alt="attachment"
+        className="max-w-full rounded-lg max-h-60 cursor-pointer hover:opacity-90"
+        onClick={() => onImageClick?.(getProfilePicUrl(message.file))}
+      />
+    ) : message.fileType === 'document' ? (
+      <a
+        href={getProfilePicUrl(message.file)}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="flex items-center gap-3 p-3 rounded-lg bg-theme-bg-secondary border border-theme-border hover:opacity-90"
+      >
+        <svg className="w-10 h-10 text-blue-500" />
+        <div className="flex-1 min-w-0">
+          <p className="text-sm font-medium truncate">
+            {decodeURIComponent(
+              message.file.split('/').pop().replace(/^\d+-/, '')
+            )}
+          </p>
+          <p className="text-xs text-theme-text-muted">
+            Click to open
+          </p>
+        </div>
+      </a>
+    ) : null}
+  </div>
+)}
+
                         {message.content && (
                             <div className={`px-4 py-2 rounded-lg transition-colors ${isSender
                                 ? 'bg-theme-bubble-sender text-white rounded-br-none'

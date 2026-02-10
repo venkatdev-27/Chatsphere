@@ -1,11 +1,30 @@
-const multer = require('multer');
-const { storage } = require('../config/cloudinary');
+const multer = require("multer");
+const { storage } = require("../config/cloudinary");
+
+const fileFilter = (req, file, cb) => {
+  const allowedMimeTypes = [
+    "application/pdf",
+    "application/msword",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    "text/plain",
+    "image/jpeg",
+    "image/png",
+  ];
+
+  if (allowedMimeTypes.includes(file.mimetype)) {
+    cb(null, true);
+  } else {
+    cb(
+      new Error("Only PDF, DOC, DOCX, TXT, JPG, PNG files are allowed"),
+      false
+    );
+  }
+};
 
 const upload = multer({
-    storage: storage,
-    limits: { fileSize: 10000000 }, // 10MB limit
-    // fileFilter is handled by allowed_formats in  cloudinary config, 
-    // but we can keep a basic check if needed, though cloudinary storage handles it well.
+  storage,
+  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
+  fileFilter,
 });
 
 module.exports = upload;

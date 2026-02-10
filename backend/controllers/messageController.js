@@ -8,78 +8,66 @@ const { getIO } = require('../services/socketService');
 // @route   POST /api/message
 // @access  Protected
 const sendMessage = async (req, res) => {
-  const { content, chatId } = req.body;
-
-  if ((!content && !req.file) || !chatId) {
-    console.log('Invalid data passed into request ❌');
-    return res.sendStatus(400);
-  }
-
-  const chatCheck = await Chat.findById(chatId);
-  if (chatCheck && chatCheck.isGroupChat) {
-      const isAdminPresent = chatCheck.users.some(u => u.toString() === chatCheck.groupAdmin.toString());
-      if (!isAdminPresent) {
-          return res.status(403).send('Group is closed because Admin left');
-      }
-  }
-
-  var newMessage = {
-    sender: req.user._id,
-    content: content || "",
-    chat: chatId,
-  };
-
-  if (req.file) {
-    newMessage.file = req.file.path;
-    
-    const mime = req.file.mimetype;
-    if (mime.startsWith('image/')) {
-        newMessage.fileType = 'image';
-        newMessage.type = 'image';
-    } else if (mime.startsWith('video/')) {
-        newMessage.fileType = 'video';
-        newMessage.type = 'video';
-    } else if (
-        mime === 'application/pdf' ||
-        mime === 'application/msword' ||
-        mime === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ||
-        mime === 'application/vnd.ms-excel' ||
-        mime === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
-        mime === 'application/vnd.ms-powerpoint' ||
-        mime === 'application/vnd.openxmlformats-officedocument.presentationml.presentation' ||
-        mime === 'text/plain'
-    ) {
-        newMessage.fileType = 'document';
-        newMessage.type = 'document';
-    }
-  }
-
   try {
-    var message = await Message.create(newMessage);
+    const { content, chatId } = req.body;
 
-    message = await message.populate('sender', 'username pic');
-    message = await message.populate('chat');
+    if ((!content?.trim() && !req.file) || !chatId) {
+      return res.status(400).json({ message: "Invalid message data" });
+    }
+
+    const chatCheck = await Chat.findById(chatId);
+    if (chatCheck?.isGroupChat) {
+      const isAdminPresent = chatCheck.users.some(
+        u => u.toString() === chatCheck.groupAdmin.toString()
+      );
+      if (!isAdminPresent) {
+        return res.status(403).json({ message: "Group is closed" });
+      }
+    }
+
+    const newMessage = {
+      sender: req.user._id,
+      content: content?.trim() || "",
+      chat: chatId,
+    };
+
+if (req.file) {
+  newMessage.file = req.file.path;
+
+  const fileType = req.file.mimetype.startsWith("image/")
+    ? "image"
+    : req.file.mimetype.startsWith("video/")
+    ? "video"
+    : "document";
+
+  newMessage.type = fileType;
+  newMessage.fileType = fileType;
+}
+
+    let message = await Message.create(newMessage);
+
+    message = await message.populate("sender", "username pic");
+    message = await message.populate("chat");
     message = await User.populate(message, {
-      path: 'chat.users',
-      select: 'username pic email',
+      path: "chat.users",
+      select: "username pic email",
     });
 
-    await Chat.findByIdAndUpdate(req.body.chatId, { latestMessage: message });
+    await Chat.findByIdAndUpdate(chatId, { latestMessage: message });
 
     await client.del(`messages:${chatId}:latest`);
-    
+
     const chat = await Chat.findById(chatId);
-    if (chat && chat.users) {
-        chat.users.forEach(async (userId) => {
-             await client.del(`chats:${userId}`);
-        });
+    if (chat?.users) {
+      await Promise.all(
+        chat.users.map(u => client.del(`chats:${u}`))
+      );
     }
 
     res.json(message);
   } catch (error) {
-    console.error("Error in sendMessage:", error);
-    res.status(400);
-    throw new Error(error.message);
+    console.error("sendMessage error:", error);
+    res.status(500).json({ message: "Failed to send message" });
   }
 };
 
@@ -211,28 +199,32 @@ const deleteMessageForEveryone = async (req, res) => {
     message.isDeletedForEveryone = true;
     message.content = '';
     message.file = '';
+    message.type = '';
     message.fileType = '';
+
+
     await message.save();
 
     await client.del(`messages:${message.chat._id}:latest`);
     
-    if (chat && chat.users) {
-      chat.users.forEach(async (userId) => {
-        await client.del(`chats:${userId}`);
-      });
-    }
+    if (chat?.users) {
+  await Promise.all(
+    chat.users.map(userId => client.del(`chats:${userId}`))
+  );
+}
+
 
     const io = getIO();
-    // Emit to all users in the chat room
-    if (chat && chat.users) {
-        chat.users.forEach(user => {
-            io.to(user._id.toString()).emit('message_deleted', {
-                messageId,
-                chatId: message.chat._id,
-                isDeletedForEveryone: true
-            });
-        });
-    }
+if (io && chat?.users) {
+  chat.users.forEach(user => {
+    io.to(user._id.toString()).emit("message_deleted", {
+      messageId,
+      chatId: message.chat._id,
+      isDeletedForEveryone: true,
+    });
+  });
+}
+
 
     res.json({ success: true, messageId, message });
   } catch (error) {

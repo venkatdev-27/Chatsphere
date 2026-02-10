@@ -9,18 +9,25 @@ const rateLimit = require('../middleware/rateLimitMiddleware');
 
 // Rate limit: 30 messages per 1 minute per user
 // Rate limit: 30 messages per 1 minute per user
-router.route('/').post(protect, rateLimit(30, 60), (req, res, next) => {
+router.post(
+  '/',
+  protect,
+  rateLimit(30, 60),
+  (req, res, next) => {
     upload.single('file')(req, res, (err) => {
-        if (err) {
-            console.error("File upload error:", err);
-            return res.status(400).json({ 
-                message: "File upload failed", 
-                error: err.message 
-            });
-        }
-        next();
+      if (err) {
+        console.error("File upload error:", err);
+        return res.status(400).json({
+          message: "File upload failed",
+          error: err.message,
+        });
+      }
+      next();
     });
-}, sendMessage);
+  },
+  sendMessage
+);
+
 router.route('/:chatId').get(protect, allMessages);
 router.route('/read/:chatId').put(protect, markMessagesAsRead);
 router.route('/deleteForMe').put(protect, deleteMessageForMe);
