@@ -29,26 +29,26 @@ const ChatBox = ({ onBackClick }) => {
     const messageInputRef = useRef(null);
     const [updateModalOpen, setUpdateModalOpen] = useState(false);
 
-useEffect(() => {
-  if (!selectedChat) return;
+    useEffect(() => {
+        if (!selectedChat) return;
 
-  dispatch(fetchMessages({ chatId: selectedChat._id, limit: 20 }));
-  dispatch(markChatAsRead(selectedChat._id));
+        dispatch(fetchMessages({ chatId: selectedChat._id, limit: 20 }));
+        dispatch(markChatAsRead(selectedChat._id));
 
-  const socket = getSocket();
+        const socket = getSocket();
 
-  const onSocketMessageDeleted = (data) => {
-    dispatch(handleMessageDeleted(data));
-  };
+        const onSocketMessageDeleted = (data) => {
+            dispatch(handleMessageDeleted(data));
+        };
 
-  socket.emit('join_room', selectedChat._id);
-  socket.on('message_deleted', onSocketMessageDeleted);
+        socket.emit('join_room', selectedChat._id);
+        socket.on('message_deleted', onSocketMessageDeleted);
 
-  return () => {
-    socket.off('message_deleted', onSocketMessageDeleted);
-    socket.emit('leave_room', selectedChat._id); // ✅ ADD THIS
-  };
-}, [selectedChat, dispatch]);
+        return () => {
+            socket.off('message_deleted', onSocketMessageDeleted);
+            socket.emit('leave_room', selectedChat._id); // ✅ ADD THIS
+        };
+    }, [selectedChat, dispatch]);
 
 
     useEffect(() => {
@@ -273,8 +273,18 @@ useEffect(() => {
                                 <div className="relative">
                                     {file.type.startsWith('image/') ? (
                                         <img src={previewUrl} alt="Preview" className="h-32 rounded-lg object-contain" />
-                                    ) : (
+                                    ) : file.type.startsWith('video/') ? (
                                         <video src={previewUrl} controls className="h-32 rounded-lg" />
+                                    ) : (
+                                        <div className="flex items-center gap-3 p-3 bg-theme-bg-secondary rounded-lg min-w-[200px]">
+                                            <svg className="w-12 h-12 text-blue-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clipRule="evenodd" />
+                                            </svg>
+                                            <div className="flex-1 min-w-0">
+                                                <p className="text-xs font-medium text-theme-text-primary truncate">{file.name}</p>
+                                                <p className="text-xs text-theme-text-muted">{(file.size / 1024).toFixed(1)} KB</p>
+                                            </div>
+                                        </div>
                                     )}
                                     <button
                                         type="button"
@@ -286,12 +296,14 @@ useEffect(() => {
                                         </svg>
                                     </button>
                                 </div>
-                                <p className="text-xs text-center text-theme-text-muted mt-1 truncate max-w-[200px]">{file.name}</p>
+                                {(file.type.startsWith('image/') || file.type.startsWith('video/')) && (
+                                    <p className="text-xs text-center text-theme-text-muted mt-1 truncate max-w-[200px]">{file.name}</p>
+                                )}
                             </div>
                         )}
                         <input
                             type="file"
-                            accept="image/*,video/mp4,video/webm"
+                            accept="image/*,video/mp4,video/webm,application/pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt"
                             ref={fileInputRef}
                             style={{ display: 'none' }}
                             onChange={handleFileChange}
