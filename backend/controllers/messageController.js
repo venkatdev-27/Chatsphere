@@ -35,8 +35,22 @@ const sendMessage = async (req, res) => {
     const mime = req.file.mimetype;
     if (mime.startsWith('image/')) {
         newMessage.fileType = 'image';
+        newMessage.type = 'image';
     } else if (mime.startsWith('video/')) {
         newMessage.fileType = 'video';
+        newMessage.type = 'video';
+    } else if (
+        mime === 'application/pdf' ||
+        mime === 'application/msword' ||
+        mime === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ||
+        mime === 'application/vnd.ms-excel' ||
+        mime === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
+        mime === 'application/vnd.ms-powerpoint' ||
+        mime === 'application/vnd.openxmlformats-officedocument.presentationml.presentation' ||
+        mime === 'text/plain'
+    ) {
+        newMessage.fileType = 'document';
+        newMessage.type = 'document';
     }
   }
 
