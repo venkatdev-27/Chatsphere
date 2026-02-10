@@ -45,8 +45,10 @@ const AuthLayout = () => {
             </div>
 
             {/* Content Container */}
-            <div className="relative z-10 w-full max-w-md mx-auto p-4 flex-1 flex items-center justify-center pt-20 pb-4">
-                <Outlet />
+            <div className="relative z-10 w-full max-w-md mx-auto p-4 pt-20 pb-8">
+                <div className="min-h-[calc(100vh-14rem)] flex items-center justify-center">
+                    <Outlet />
+                </div>
             </div>
 
             {/* Footer */}
