@@ -55,6 +55,7 @@ const AuthLayout = () => {
             <Footer />
         </div>
     );
+    
 };
 
 export default AuthLayout;
