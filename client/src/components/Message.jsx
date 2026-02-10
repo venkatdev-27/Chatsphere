@@ -7,6 +7,26 @@ import { getProfilePicUrl } from '../utils/authHelper';
 import SystemMessage from './SystemMessage';
 
 
+const getDownloadUrl = (url) => {
+  if (!url) return url;
+  return url.replace('/upload/', '/upload/fl_attachment/');
+};
+const getFileNameFromUrl = (url) => {
+  if (!url) return 'File';
+  const lastPart = url.split('/').pop();
+  return decodeURIComponent(lastPart.replace(/^\d+-/, ''));
+};
+const getFileExtension = (url) => {
+  if (!url) return 'FILE';
+  const cleanUrl = url.split('?')[0];
+  const parts = cleanUrl.split('.');
+  return parts.length > 1 ? parts.pop().toUpperCase() : 'FILE';
+};
+
+
+
+
+
 const Message = ({ message, isGroupChat, onImageClick }) => {
     const { user } = useSelector((state) => state.auth);
     const { selectedChat } = useSelector((state) => state.chat);
@@ -180,24 +200,26 @@ const Message = ({ message, isGroupChat, onImageClick }) => {
                                             </div>
                                             <div className="flex-1 min-w-0">
                                                 <p className="text-sm font-medium truncate text-theme-text-primary">
-                                                    {decodeURIComponent(
-                                                        message.file.split('/').pop().replace(/^\d+-/, '')
-                                                    )}
-                                                </p>
-                                                <p className="text-xs text-theme-text-muted flex items-center gap-1">
-                                                    <span>Tap to preview</span>
-                                                    <span className="w-1 h-1 rounded-full bg-theme-text-muted"></span>
-                                                    <span className="uppercase text-[10px]">{message.file.split('.').pop()}</span>
-                                                </p>
+                                             {getFileNameFromUrl(message.file)}
+                                           </p>
+                                           <p className="text-xs text-theme-text-muted flex items-center gap-1">
+                                             <span>Tap to preview</span>
+                                             <span className="w-1 h-1 rounded-full bg-theme-text-muted"></span>
+                                            <span className="uppercase text-[10px]">
+                                              {getFileExtension(message.file)}
+                                            </span>
+
+                                           </p>
+
                                             </div>
                                         </div>
                                         <a
-                                            href={getProfilePicUrl(message.file)}
-                                            download={decodeURIComponent(message.file.split('/').pop().replace(/^\d+-/, ''))}
-                                            onClick={(e) => e.stopPropagation()}
-                                            className="p-2 hover:bg-theme-bg-tertiary rounded-lg transition-colors flex-shrink-0"
+                                            href={getDownloadUrl(getProfilePicUrl(message.file))}
+                                                onClick={(e) => e.stopPropagation()}
+                                            className="p-2 hover:bg-theme-bg-tertiary rounded-lg transition-colors"
                                             title="Download file"
                                         >
+
                                             <svg className="w-5 h-5 text-theme-text-secondary hover:text-blue-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                                             </svg>
