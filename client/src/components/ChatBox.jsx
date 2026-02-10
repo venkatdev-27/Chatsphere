@@ -22,6 +22,7 @@ const ChatBox = ({ onBackClick }) => {
     const [file, setFile] = useState(null);
     const [previewUrl, setPreviewUrl] = useState(null);
     const [previewImage, setPreviewImage] = useState(null);
+    const [previewType, setPreviewType] = useState('image'); // 'image' or 'document'
     const messagesContainerRef = useRef(null);
     const prevScrollHeightRef = useRef(null);
     const messagesEndRef = useRef(null);
@@ -242,7 +243,10 @@ const ChatBox = ({ onBackClick }) => {
                                 <Message
                                     message={msg}
                                     isGroupChat={selectedChat.isGroupChat}
-                                    onImageClick={(url) => setPreviewImage(url)}
+                                    onImageClick={(url, type = 'image') => {
+                                        setPreviewImage(url);
+                                        setPreviewType(type);
+                                    }}
                                 />
                             </React.Fragment>
                         );
@@ -349,7 +353,11 @@ const ChatBox = ({ onBackClick }) => {
                 previewImage && (
                     <ImagePreviewModal
                         imageSrc={previewImage}
-                        onClose={() => setPreviewImage(null)}
+                        type={previewType}
+                        onClose={() => {
+                            setPreviewImage(null);
+                            setPreviewType('image');
+                        }}
                     />
                 )
             }
