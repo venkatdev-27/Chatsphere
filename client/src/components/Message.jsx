@@ -8,19 +8,19 @@ import SystemMessage from './SystemMessage';
 
 
 const getDownloadUrl = (url) => {
-  if (!url) return url;
-  return url.replace('/upload/', '/upload/fl_attachment/');
+    if (!url) return url;
+    return url.replace('/upload/', '/upload/fl_attachment/');
 };
 const getFileNameFromUrl = (url) => {
-  if (!url) return 'File';
-  const lastPart = url.split('/').pop();
-  return decodeURIComponent(lastPart.replace(/^\d+-/, ''));
+    if (!url) return 'File';
+    const lastPart = url.split('/').pop();
+    return decodeURIComponent(lastPart.replace(/^\d+-/, ''));
 };
 const getFileExtension = (url) => {
-  if (!url) return 'FILE';
-  const cleanUrl = url.split('?')[0];
-  const parts = cleanUrl.split('.');
-  return parts.length > 1 ? parts.pop().toUpperCase() : 'FILE';
+    if (!url) return 'FILE';
+    const cleanUrl = url.split('?')[0];
+    const parts = cleanUrl.split('.');
+    return parts.length > 1 ? parts.pop().toUpperCase() : 'FILE';
 };
 
 
@@ -120,7 +120,7 @@ const Message = ({ message, isGroupChat, onImageClick }) => {
         <div
             className={`flex ${isSender ? 'justify-end' : 'justify-start'} mb-4 relative group`}
         >
-            <div className="flex flex-col max-w-[70%]">
+            <div className="flex flex-col max-w-[85%] sm:max-w-[70%]">
                 {/* Sender Name in Group Chat */}
                 {isGroupChat && !isSender && (
                     <span className="text-xs text-theme-text-muted ml-1 mb-1">
@@ -188,38 +188,31 @@ const Message = ({ message, isGroupChat, onImageClick }) => {
                                         onClick={() => onImageClick?.(getProfilePicUrl(message.file))}
                                     />
                                 ) : message.fileType === 'document' ? (
-                                    <div className="flex items-center gap-3 p-3 rounded-lg bg-theme-bg-secondary border border-theme-border">
+                                    <div className="flex items-center gap-2 p-2.5 rounded-lg bg-theme-bg-secondary border border-theme-border max-w-full">
                                         <div
-                                            className="flex items-center gap-3 flex-1 min-w-0 cursor-pointer hover:opacity-80 transition-opacity"
+                                            className="flex items-center gap-2 flex-1 min-w-0 cursor-pointer hover:opacity-80 transition-opacity"
                                             onClick={() => onImageClick?.(getProfilePicUrl(message.file), 'document')}
                                         >
-                                            <div className="p-2 bg-blue-500/10 rounded-lg">
-                                                <svg className="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <div className="p-1.5 bg-blue-500/10 rounded-lg flex-shrink-0">
+                                                <svg className="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                                                 </svg>
                                             </div>
-                                            <div className="flex-1 min-w-0">
+                                            <div className="flex-1 min-w-0 overflow-hidden">
                                                 <p className="text-sm font-medium truncate text-theme-text-primary">
-                                             {getFileNameFromUrl(message.file)}
-                                           </p>
-                                           <p className="text-xs text-theme-text-muted flex items-center gap-1">
-                                             <span>Tap to preview</span>
-                                             <span className="w-1 h-1 rounded-full bg-theme-text-muted"></span>
-                                            <span className="uppercase text-[10px]">
-                                              {getFileExtension(message.file)}
-                                            </span>
-
-                                           </p>
-
+                                                    {getFileNameFromUrl(message.file)}
+                                                </p>
+                                                <p className="text-xs text-theme-text-muted truncate">
+                                                    <span>Tap to preview • {getFileExtension(message.file)}</span>
+                                                </p>
                                             </div>
                                         </div>
                                         <a
                                             href={getDownloadUrl(getProfilePicUrl(message.file))}
-                                                onClick={(e) => e.stopPropagation()}
-                                            className="p-2 hover:bg-theme-bg-tertiary rounded-lg transition-colors"
+                                            onClick={(e) => e.stopPropagation()}
+                                            className="p-1.5 hover:bg-theme-bg-tertiary rounded-lg transition-colors flex-shrink-0"
                                             title="Download file"
                                         >
-
                                             <svg className="w-5 h-5 text-theme-text-secondary hover:text-blue-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                                             </svg>
