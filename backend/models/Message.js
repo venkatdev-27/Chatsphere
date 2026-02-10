@@ -7,8 +7,8 @@ const messageSchema = mongoose.Schema(
     chat: { type: mongoose.Schema.Types.ObjectId, ref: 'Chat' },
     readBy: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     file: { type: String, default: "" },
-    fileType: { type: String, default: "" }, // "image" or "video"
-    type: { type: String, default: "text", enum: ["text", "image", "video", "system"] }, // Message type
+    fileType: { type: String, default: "" }, // "image", "video", or "document"
+    type: { type: String, default: "text", enum: ["text", "image", "video", "document", "system"] }, // Message type
     deletedBy: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }], // For "Delete for me"
     isDeletedForEveryone: { type: Boolean, default: false }, // For "Delete for everyone"
   },
