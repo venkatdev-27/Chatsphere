@@ -23,9 +23,16 @@ const Navbar = () => {
       {/* Navbar bar */}
       <div className="flex items-center justify-between h-14 px-4 md:px-8">
         {/* Logo */}
-        <h1 className="text-xl font-bold bg-gradient-to-r from-indigo-400 to-purple-500 bg-clip-text text-transparent">
-          ChatSphere
-        </h1>
+        <div className="flex items-center gap-2">
+          <img
+            src="/src/assets/logo.png"
+            alt="ChatSphere Logo"
+            className="h-6 w-6 md:h-8 md:w-8 object-contain"
+          />
+          <h1 className="text-lg md:text-xl font-bold bg-gradient-to-r from-indigo-400 to-purple-500 bg-clip-text text-transparent">
+            ChatSphere
+          </h1>
+        </div>
 
         {/* Desktop links */}
         <nav className="hidden md:flex gap-8 text-sm text-slate-300">
@@ -58,7 +65,7 @@ const Navbar = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.2 }}
-           className="md:hidden absolute top-full right-0 w-[45%] bg-slate-900 shadow-xl"
+            className="md:hidden absolute top-full right-0 w-[45%] bg-slate-900 shadow-xl"
           >
             <nav className="flex flex-col p-4 space-y-3">
               {navLinks.map((link) => (
