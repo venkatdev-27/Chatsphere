@@ -1,5 +1,7 @@
 import { Outlet } from "react-router-dom";
 import LightRays from "@/components/animate-ui/components/backgrounds/LightRays";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
 const AuthLayout = () => {
     return (
@@ -7,13 +9,16 @@ const AuthLayout = () => {
             className="
         relative
         min-h-screen w-full
-        flex items-center justify-center
-        overflow-hidden
+        flex flex-col
+        overflow-y-auto
         font-sans
         text-slate-100
       "
             style={{ backgroundColor: '#0E1117' }} // Deep Graphite
         >
+            {/* Navbar */}
+            <Navbar />
+
             {/* Light Rays Container - Top portion only */}
             <div className="absolute inset-x-0 top-0 h-[60vh] z-0 pointer-events-none overflow-hidden">
                 <div
@@ -40,9 +45,12 @@ const AuthLayout = () => {
             </div>
 
             {/* Content Container */}
-            <div className="relative z-10 w-full max-w-md p-4 auth-scroll">
+            <div className="relative z-10 w-full max-w-md mx-auto p-4 flex-1 flex items-center justify-center pt-20 pb-4">
                 <Outlet />
             </div>
+
+            {/* Footer */}
+            <Footer />
         </div>
     );
 };
