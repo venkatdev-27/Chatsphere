@@ -16,7 +16,7 @@ const storage = new CloudinaryStorage({
     return {
       folder: 'chatsphere',
       resource_type: 'auto',
-      allowed_formats: ['jpg', 'png', 'jpeg', 'mp4', 'webm'],
+      allowed_formats: ['jpg', 'png', 'jpeg', 'mp4', 'webm', 'pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'txt'],
     };
   },
 });
