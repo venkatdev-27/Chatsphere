@@ -199,7 +199,6 @@ const deleteMessageForEveryone = async (req, res) => {
     message.isDeletedForEveryone = true;
     message.content = '';
     message.file = '';
-    message.type = '';
     message.fileType = '';
 
 
