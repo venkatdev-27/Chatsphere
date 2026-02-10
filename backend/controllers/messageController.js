@@ -77,6 +77,7 @@ const sendMessage = async (req, res) => {
 
     res.json(message);
   } catch (error) {
+    console.error("Error in sendMessage:", error);
     res.status(400);
     throw new Error(error.message);
   }

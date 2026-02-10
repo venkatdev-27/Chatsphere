@@ -11,6 +11,9 @@ const { notFound, errorHandler } = require('./middleware/errorMiddleware');
 const app = express();
 
 app.use(compression({ threshold: 1024 }));
+
+app.use(express.json({ limit: '10mb' }));
+
 const allowedOrigins = [
   "http://localhost:5173",
   "https://chatsphere-25jb.onrender.com",
@@ -36,7 +39,7 @@ app.use(cors({
 
 
 
-app.use(express.json({ limit: '10mb' }));
+
 
 app.use('/api/auth', authRoutes);
 app.use('/api/chat', chatRoutes);
