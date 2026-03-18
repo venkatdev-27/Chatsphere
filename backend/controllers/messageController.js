@@ -1,7 +1,7 @@
 const Message = require('../models/Message');
 const User = require('../models/userModel');
 const Chat = require('../models/Chat');
-const { client } = require('../config/redis');
+const { safeRedis } = require('../config/redis');
 const { getIO } = require('../services/socketService');
 
 // @desc    Send New Message 📨
@@ -55,12 +55,12 @@ if (req.file) {
 
     await Chat.findByIdAndUpdate(chatId, { latestMessage: message });
 
-    await client.del(`messages:${chatId}:latest`);
+    await safeRedis.del(`messages:${chatId}:latest`);
 
     const chat = await Chat.findById(chatId);
     if (chat?.users) {
       await Promise.all(
-        chat.users.map(u => client.del(`chats:${u}`))
+        chat.users.map(u => safeRedis.del(`chats:${u}`))
       );
     }
 
@@ -84,7 +84,7 @@ const allMessages = async (req, res) => {
     const cacheKey = `messages:${chatId}:latest`;
 
     if (isFirstPage) {
-      const cachedMessages = await client.get(cacheKey);
+      const cachedMessages = await safeRedis.get(cacheKey);
       if (cachedMessages) {
          return res.json(JSON.parse(cachedMessages));
       }
@@ -108,7 +108,7 @@ const allMessages = async (req, res) => {
     const reversedMessages = messages.reverse();
 
     if (isFirstPage) {
-       await client.setEx(cacheKey, 60 * 5, JSON.stringify(reversedMessages)); // 5 min TTL
+       await safeRedis.setEx(cacheKey, 60 * 5, JSON.stringify(reversedMessages)); // 5 min TTL
     }
 
     res.json(reversedMessages);
@@ -136,8 +136,8 @@ const markMessagesAsRead = async (req, res) => {
       }
     );
 
-    await client.del(`messages:${chatId}:latest`);
-    await client.del(`chats:${req.user._id}`);
+    await safeRedis.del(`messages:${chatId}:latest`);
+    await safeRedis.del(`chats:${req.user._id}`);
 
     res.json({ success: true });
   } catch (error) {
@@ -164,7 +164,7 @@ const deleteMessageForMe = async (req, res) => {
       throw new Error('Message not found');
     }
 
-    await client.del(`messages:${message.chat}:latest`);
+    await safeRedis.del(`messages:${message.chat}:latest`);
 
     res.json({ success: true, messageId });
   } catch (error) {
@@ -204,11 +204,11 @@ const deleteMessageForEveryone = async (req, res) => {
 
     await message.save();
 
-    await client.del(`messages:${message.chat._id}:latest`);
+    await safeRedis.del(`messages:${message.chat._id}:latest`);
     
     if (chat?.users) {
   await Promise.all(
-    chat.users.map(userId => client.del(`chats:${userId}`))
+    chat.users.map(userId => safeRedis.del(`chats:${userId}`))
   );
 }
 
@@ -247,7 +247,7 @@ const clearChat = async (req, res) => {
       { $addToSet: { deletedBy: req.user._id } }
     );
 
-    await client.del(`messages:${chatId}:latest`);
+    await safeRedis.del(`messages:${chatId}:latest`);
 
     res.json({ success: true });
   } catch (error) {
@@ -259,3 +259,4 @@ const clearChat = async (req, res) => {
 
 
 module.exports = { sendMessage, allMessages, markMessagesAsRead, deleteMessageForMe, deleteMessageForEveryone, clearChat };
+
