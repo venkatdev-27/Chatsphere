@@ -1,6 +1,6 @@
 const Chat = require('../models/Chat');
 const User = require('../models/userModel');
-const { client } = require('../config/redis');
+const { safeRedis } = require('../config/redis');
 const { getIO } = require('../services/socketService');
 const Message = require('../models/Message');
 
@@ -68,8 +68,8 @@ const accessChat = async (req, res) => {
         .populate('users', '-password')
         .lean(); // Optimization: Return plain object
 
-      await client.del(`chats:${req.user._id}`);
-      await client.del(`chats:${userId}`);
+      await safeRedis.del(`chats:${req.user._id}`);
+      await safeRedis.del(`chats:${userId}`);
 
       res.status(200).json(FullChat);
     } catch (error) {
@@ -86,7 +86,7 @@ const fetchChats = async (req, res) => {
   try {
     const cacheKey = `chats:${req.user._id}`;
 
-    const cachedChats = await client.get(cacheKey);
+    const cachedChats = await safeRedis.get(cacheKey);
     if (cachedChats) {
       return res.status(200).send(JSON.parse(cachedChats));
     }
@@ -120,7 +120,7 @@ const fetchChats = async (req, res) => {
             chat.unreadCount = unreadCount;
           }
 
-        await client.setEx(cacheKey, 30, JSON.stringify(results));
+        await safeRedis.setEx(cacheKey, 30, JSON.stringify(results));
         
         res.status(200).send(results);
       });
@@ -163,11 +163,11 @@ const createGroupChat = async (req, res) => {
       .populate('removedUsers', '-password');
 
     users.forEach(async (u) => {
-        await client.del(`chats:${u._id}`);
+        await safeRedis.del(`chats:${u._id}`);
     });
 
     users.forEach(async (u) => {
-        await client.del(`chats:${u._id}`);
+        await safeRedis.del(`chats:${u._id}`);
     });
 
     await createAndEmitSystemMessage(groupChat._id, `Group "${req.body.name}" created`);
@@ -214,11 +214,11 @@ const renameGroup = async (req, res) => {
     }
 
     updatedChat.users.forEach(async (u) => {
-        await client.del(`chats:${u._id}`);
+        await safeRedis.del(`chats:${u._id}`);
     });
     if (updatedChat.removedUsers) {
         updatedChat.removedUsers.forEach(async (u) => {
-             await client.del(`chats:${u}`);
+             await safeRedis.del(`chats:${u}`);
         });
     }
 
@@ -270,7 +270,7 @@ const addToGroup = async (req, res) => {
       .populate('removedUsers', '-password');
 
     added.users.forEach(async (u) => {
-        await client.del(`chats:${u._id}`);
+        await safeRedis.del(`chats:${u._id}`);
     });
     
     // Find the user details to add to the system message
@@ -319,9 +319,9 @@ const removeFromGroup = async (req, res) => {
       .populate('removedUsers', '-password');
 
     removed.users.forEach(async (u) => {
-        await client.del(`chats:${u._id}`);
+        await safeRedis.del(`chats:${u._id}`);
     });
-    await client.del(`chats:${userId}`);
+    await safeRedis.del(`chats:${userId}`);
     res.json(removed);
 
     // Find the user details
@@ -381,7 +381,7 @@ const deleteChat = async (req, res) => {
       await Chat.findByIdAndDelete(chatId);
     }
 
-    await client.del(`chats:${req.user._id}`);
+    await safeRedis.del(`chats:${req.user._id}`);
 
     res.json({ success: true, chatId });
   } catch (error) {
@@ -399,3 +399,4 @@ module.exports = {
   removeFromGroup,
   deleteChat
 };
+
